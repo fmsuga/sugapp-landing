@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Páginas web, automatizaciones y software a medida para modernizar cómo trabajan negocios y profesionales.">
-  <meta name="theme-color" content="#173d35">
-  <meta property="og:title" content="SugApp — Soluciones digitales a medida">
-  <meta property="og:description" content="Modernizamos la forma de trabajar de negocios y profesionales con páginas, sistemas y herramientas adaptadas.">
+  <meta name="description" content="Software a medida, páginas y herramientas digitales para modernizar cómo trabajan negocios y profesionales.">
+  <meta name="theme-color" content="#090b09">
+  <meta property="og:title" content="SugApp — Software a medida para necesidades reales">
+  <meta property="og:description" content="Transformamos tareas, procesos e ideas en soluciones digitales claras y adaptadas.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_AR">
-  <meta property="og:image" content="assets/images/sugapp-workspace.png">
-  <title>SugApp — Soluciones digitales a medida</title>
+  <!-- Agregar una imagen Open Graph propia cuando exista un recurso de marca definitivo. -->
+  <!-- Agregar la URL canónica cuando se confirme el dominio público. -->
+  <title>SugApp — Software a medida para necesidades reales</title>
+  <script>document.documentElement.classList.add("js");</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,303 +20,333 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+  <!-- Presentación breve: JavaScript evita repetirla durante la sesión. -->
+  <div class="brand-intro" aria-hidden="true" data-brand-intro>
+    <span>SugApp</span>
+  </div>
+
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
   <header class="site-header" data-header>
-    <div class="shell nav-wrap">
-      <a class="brand" href="#inicio" aria-label="SugApp, inicio">
-        <span class="brand-mark" aria-hidden="true">S</span>
-        <span>SugApp</span>
-      </a>
-      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-button>
-        <span class="sr-only">Abrir menú</span>
-        <span></span><span></span>
-      </button>
-      <nav id="site-nav" class="nav" aria-label="Navegación principal" data-nav>
+    <div class="hero-header">
+      <a class="wordmark" href="#inicio" aria-label="SugApp, inicio">sugapp</a>
+      <nav class="header-nav" aria-label="Navegación principal">
+        <a href="#explorar">Demos</a>
         <a href="#soluciones">Soluciones</a>
-        <a href="#explorar">Explorar</a>
         <a href="#proceso">Cómo trabajamos</a>
-        <a class="nav-cta" href="#contacto">Consultar <span aria-hidden="true">↗</span></a>
       </nav>
+      <a class="header-contact" href="#contacto">contactame <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
   <main id="contenido">
+    <!-- Propuesta principal y comparación visual antes/después. -->
     <section class="hero" id="inicio" aria-labelledby="hero-title">
-      <img class="hero-image" src="assets/images/sugapp-workspace.webp" alt="Espacio de trabajo con sistemas digitales en uso" width="1672" height="941" fetchpriority="high">
-      <div class="hero-shade"></div>
-      <div class="shell hero-inner">
-        <p class="eyebrow light">Software a medida / Web / Automatización</p>
-        <h1 id="hero-title">Soluciones digitales para modernizar cómo trabajás.</h1>
-        <p class="hero-copy">Diseñamos páginas, sistemas y herramientas adaptadas a las necesidades reales de cada negocio.</p>
-        <div class="hero-actions">
-          <a class="button button-light" href="#contacto">Contanos qué necesitás <span aria-hidden="true">↗</span></a>
-          <a class="text-link light" href="#explorar">Explorar ejemplos <span aria-hidden="true">↓</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section solutions" id="soluciones" aria-labelledby="solutions-title">
-      <div class="shell">
-        <div class="section-heading compact-heading">
-          <div>
-            <p class="eyebrow">01 / Soluciones</p>
-            <h2 id="solutions-title">¿Qué necesitás mejorar?</h2>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="shell hero-layout">
+        <div class="hero-content">
+          <h1 id="hero-title">Modernizá tu forma de trabajar.</h1>
+          <p class="hero-copy">Software, páginas y herramientas digitales pensadas para resolver lo que hoy te quita tiempo o limita tu negocio.</p>
+          <div class="hero-actions">
+            <a class="button button-accent" href="#explorar">Explorar soluciones <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="#contacto">Contame qué necesitás <span aria-hidden="true">↗</span></a>
           </div>
-          <p>Empezamos por una necesidad cotidiana y definimos la solución desde ahí.</p>
         </div>
 
-        <div class="solution-families" data-family-list>
-          <article class="family">
-            <button class="family-trigger" type="button" aria-expanded="false" aria-controls="family-presence" id="family-presence-button">
-              <span class="family-number">01</span>
-              <span><strong>Mostrar mejor tu negocio</strong><small>Una presencia clara para que te encuentren, entiendan y contacten.</small></span>
-              <span class="family-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="family-panel" id="family-presence" role="region" aria-labelledby="family-presence-button" hidden>
-              <p>Podemos crear una landing, un sitio institucional, un catálogo, reservas, formularios o una tienda, con diseño adaptable a cada pantalla.</p>
-              <ul class="inline-list" aria-label="Ejemplos">
-                <li>Web profesional</li><li>Catálogo</li><li>Reservas</li><li>WhatsApp</li>
-              </ul>
-              <a class="text-link" href="#web-demo">Ver demostración <span aria-hidden="true">↓</span></a>
+        <div class="work-transformation" aria-label="Comparación visual entre un proceso desordenado y una solución conectada">
+          <div class="transformation-panel before-panel">
+            <div class="transformation-label"><span>Ahora</span><small>Información dispersa</small></div>
+            <div class="loose-items" aria-hidden="true">
+              <span class="loose-note">WhatsApp<i>12</i></span>
+              <span class="loose-sheet">Planilla<em></em><em></em><em></em></span>
+              <span class="loose-task">Anotar pedido</span>
+              <span class="loose-alert">Stock?</span>
             </div>
-          </article>
-
-          <article class="family">
-            <button class="family-trigger" type="button" aria-expanded="false" aria-controls="family-operations" id="family-operations-button">
-              <span class="family-number">02</span>
-              <span><strong>Organizar cómo trabajás</strong><small>Información y tareas importantes, ordenadas en un solo lugar.</small></span>
-              <span class="family-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="family-panel" id="family-operations" role="region" aria-labelledby="family-operations-button" hidden>
-              <p>Paneles de gestión, turnos, stock, ventas, pedidos o métricas diseñados alrededor de la operación real de tu negocio.</p>
-              <ul class="inline-list" aria-label="Ejemplos">
-                <li>Turnos</li><li>Stock</li><li>Ventas</li><li>Paneles</li>
-              </ul>
-              <a class="text-link" href="#panel-demo">Probar panel adaptable <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="transformation-arrow" aria-hidden="true"><i></i><span>adaptar</span></div>
+          <div class="transformation-panel after-panel">
+            <div class="transformation-label"><span>Después</span><small>Un sistema claro</small></div>
+            <div class="mini-interface" aria-hidden="true">
+              <div class="mini-top"><i></i><span>Resumen de hoy</span><small>En línea</small></div>
+              <div class="mini-metrics"><span><small>Ventas</small><strong>$184k</strong></span><span><small>Pedidos</small><strong>18</strong></span></div>
+              <div class="mini-flow"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="mini-actions"><span>Registrar</span><span>Consultar</span></div>
             </div>
-          </article>
-
-          <article class="family">
-            <button class="family-trigger" type="button" aria-expanded="false" aria-controls="family-automation" id="family-automation-button">
-              <span class="family-number">03</span>
-              <span><strong>Simplificar tareas</strong><small>Menos pasos manuales para resolver acciones que se repiten.</small></span>
-              <span class="family-icon" aria-hidden="true">+</span>
-            </button>
-            <div class="family-panel" id="family-automation" role="region" aria-labelledby="family-automation-button" hidden>
-              <p>Una misma acción puede resolverse con un formulario, un escaneo, voz o un asistente, según el contexto y siempre con control antes de confirmar.</p>
-              <ul class="inline-list" aria-label="Ejemplos">
-                <li>Automatizaciones</li><li>Asistentes</li><li>Integraciones</li>
-              </ul>
-              <a class="text-link" href="#operations-demo">Ver formas de interacción <span aria-hidden="true">↓</span></a>
-            </div>
-          </article>
+          </div>
+          <p class="transformation-caption"><strong> Tus reglas de siempre,</strong> pero mejor organizadas, más ágiles y preparadas para trabajar de una forma más actual.</p>
         </div>
-
-        <p class="small-projects">También trabajamos en proyectos acotados: una landing, un catálogo, un formulario, una integración o una primera versión funcional.</p>
       </div>
     </section>
 
+    <!-- Las tres demos comparten navegación y lógica reutilizable. -->
     <section class="section demos" id="explorar" aria-labelledby="demos-title">
-      <div class="shell">
-        <div class="section-heading">
+      <div class="wide-shell">
+        <div class="section-heading demo-heading">
           <div>
-            <p class="eyebrow">02 / Demostraciones</p>
+            <p class="eyebrow">01 / Laboratorio interactivo</p>
             <h2 id="demos-title">Explorá lo que podemos construir.</h2>
           </div>
-          <p>Ejemplos interactivos para mostrar cómo una solución cambia según cada actividad.</p>
-        </div>
-        <p class="demo-disclaimer">Demostraciones interactivas con datos ficticios.</p>
-
-        <div class="demo-index" role="tablist" aria-label="Demostraciones disponibles" data-demo-tabs>
-          <button type="button" role="tab" aria-selected="true" aria-controls="demo-panel-dashboard" id="demo-tab-dashboard" tabindex="0" data-demo-tab="dashboard">
-            <span>01</span>Panel adaptable
-          </button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="demo-panel-web" id="demo-tab-web" tabindex="-1" data-demo-tab="web">
-            <span>02</span>Páginas y comercio
-          </button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="demo-panel-operations" id="demo-tab-operations" tabindex="-1" data-demo-tab="operations">
-            <span>03</span>Stock y operaciones
-          </button>
+          <div>
+            <p>Demostraciones de soluciones que pueden adaptarse a distintas formas de trabajar.</p>
+            <small>Ejemplos conceptuales con datos ficticios.</small>
+          </div>
         </div>
 
-        <div class="demo-stage">
-          <section class="demo-panel" id="demo-panel-dashboard" role="tabpanel" aria-labelledby="demo-tab-dashboard" data-demo-panel="dashboard">
-            <div class="demo-intro">
-              <div>
-                <p class="demo-kicker">Panel adaptable por rubro</p>
-                <h3>La información importante cambia con cada negocio.</h3>
-              </div>
-              <p>Probá cambiar el tipo de actividad para ver cómo se reorganizan las prioridades.</p>
+        <div class="demo-lab" id="demo-lab" data-demo-lab>
+          <div class="lab-topbar">
+            <div><span class="lab-status"></span><strong>Demo workspace</strong><small data-lab-location>Paneles / Despensa</small></div>
+            <div class="lab-actions">
+              <a href="#contacto" class="lab-consult" data-demo-consult>Consultar por algo similar</a>
+              <button class="lab-expand" type="button" aria-expanded="false" aria-controls="demo-lab" data-lab-expand>
+                <span data-expand-label>Ampliar</span><i aria-hidden="true"></i>
+              </button>
             </div>
+          </div>
 
-            <div class="business-switcher" role="tablist" aria-label="Tipo de actividad" data-business-tabs>
-              <button type="button" role="tab" aria-selected="true" aria-controls="business-dashboard" id="business-tab-grocery" tabindex="0" data-business="grocery">Despensa</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="business-dashboard" id="business-tab-salon" tabindex="-1" data-business="salon">Peluquería</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="business-dashboard" id="business-tab-psychology" tabindex="-1" data-business="psychology">Psicología</button>
-            </div>
-
-            <div class="dashboard-window theme-grocery" id="business-dashboard" role="tabpanel" aria-live="polite" aria-labelledby="business-tab-grocery" data-dashboard>
-              <div class="window-bar">
-                <div><span class="status-dot"></span><strong data-dashboard-name>Despensa Norte</strong></div>
-                <span data-dashboard-date>Hoy, 18:40</span>
+          <div class="lab-layout">
+            <aside class="demo-index" aria-label="Familias de demostraciones">
+              <p>Familias</p>
+              <div role="tablist" aria-label="Demostraciones disponibles" data-demo-tabs>
+                <button type="button" role="tab" aria-selected="true" aria-controls="demo-panel-dashboard" id="demo-tab-dashboard" tabindex="0" data-demo-tab="dashboard">
+                  <span>01</span><strong>Paneles</strong><small>Información útil para cada actividad</small>
+                </button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="demo-panel-web" id="demo-tab-web" tabindex="-1" data-demo-tab="web">
+                  <span>02</span><strong>Páginas</strong><small>Presencia, catálogo y reservas</small>
+                </button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="demo-panel-operations" id="demo-tab-operations" tabindex="-1" data-demo-tab="operations">
+                  <span>03</span><strong>Operaciones</strong><small>Distintas formas de hacer una tarea</small>
+                </button>
               </div>
-              <div class="dashboard-shell">
-                <aside class="dashboard-sidebar" aria-label="Navegación simulada">
-                  <span class="dashboard-logo" aria-hidden="true">DN</span>
-                  <span class="sidebar-item active">Resumen</span>
-                  <span class="sidebar-item" data-nav-label>Productos</span>
-                  <span class="sidebar-item">Actividad</span>
-                </aside>
-                <div class="dashboard-main">
-                  <header class="dashboard-header">
-                    <div><p data-dashboard-greeting>Buenas tardes</p><h4 data-dashboard-title>Así viene el día</h4></div>
-                    <button class="demo-action" type="button" data-dashboard-action>Registrar venta</button>
-                  </header>
-                  <div class="metric-grid" data-metrics></div>
-                  <div class="dashboard-lower">
-                    <article class="chart-module">
-                      <div class="module-heading"><div><span data-chart-label>Ventas por franja</span><strong data-chart-total>$ 184.600</strong></div><small>Últimos 7 días</small></div>
-                      <div class="bar-chart" aria-label="Gráfico simulado" data-chart></div>
-                    </article>
-                    <article class="alert-module">
-                      <div class="module-heading"><span data-alert-title>Atención hoy</span><small data-alert-count>3 avisos</small></div>
-                      <ul data-alerts></ul>
-                    </article>
-                    <article class="activity-module">
-                      <div class="module-heading"><span data-activity-title>Movimientos recientes</span><small>En vivo</small></div>
-                      <ul data-activity></ul>
-                    </article>
+            </aside>
+
+            <div class="demo-stage">
+              <section class="demo-panel" id="demo-panel-dashboard" role="tabpanel" aria-labelledby="demo-tab-dashboard" data-demo-panel="dashboard">
+                <div class="demo-intro">
+                  <div><p>Panel adaptable por rubro</p><h3>La información importante cambia con cada negocio.</h3></div>
+                  <span>Probá cómo cambia el panel según la actividad.</span>
+                </div>
+
+                <div class="secondary-tabs" role="tablist" aria-label="Tipo de actividad" data-business-tabs>
+                  <button type="button" role="tab" aria-selected="true" aria-controls="business-dashboard" id="business-tab-grocery" tabindex="0" data-business="grocery">Despensa</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="business-dashboard" id="business-tab-salon" tabindex="-1" data-business="salon">Peluquería</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="business-dashboard" id="business-tab-psychology" tabindex="-1" data-business="psychology">Psicología</button>
+                </div>
+
+                <div class="dashboard-window theme-grocery" id="business-dashboard" role="tabpanel" aria-live="polite" aria-labelledby="business-tab-grocery" data-dashboard>
+                  <div class="window-bar">
+                    <div><span class="status-dot"></span><strong data-dashboard-name>Despensa Norte</strong></div>
+                    <span data-dashboard-date>Hoy, 18:40</span>
+                  </div>
+                  <div class="dashboard-shell">
+                    <aside class="dashboard-sidebar" aria-label="Navegación simulada">
+                      <span class="dashboard-logo" aria-hidden="true">DN</span>
+                      <span class="sidebar-item active">Resumen</span>
+                      <span class="sidebar-item" data-nav-label>Productos</span>
+                      <span class="sidebar-item">Actividad</span>
+                    </aside>
+                    <div class="dashboard-main">
+                      <header class="dashboard-header">
+                        <div><p data-dashboard-greeting>Buenas tardes</p><h4 data-dashboard-title>Así viene el día</h4></div>
+                        <button class="demo-action" type="button" data-dashboard-action>Registrar venta</button>
+                      </header>
+                      <div class="metric-grid" data-metrics></div>
+                      <div class="dashboard-lower">
+                        <article class="chart-module">
+                          <div class="module-heading"><div><span data-chart-label>Ventas por franja</span><strong data-chart-total>$ 184.600</strong></div><small>Últimos 7 días</small></div>
+                          <div class="bar-chart" aria-label="Gráfico simulado" data-chart></div>
+                        </article>
+                        <article class="alert-module">
+                          <div class="module-heading"><span data-alert-title>Atención hoy</span><small data-alert-count>3 avisos</small></div>
+                          <ul data-alerts></ul>
+                        </article>
+                        <article class="activity-module">
+                          <div class="module-heading"><span data-activity-title>Movimientos recientes</span><small>En vivo</small></div>
+                          <ul data-activity></ul>
+                        </article>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="demo-toast" role="status" aria-live="polite" data-demo-toast hidden></div>
+                </div>
+              </section>
+
+              <section class="demo-panel" id="demo-panel-web" role="tabpanel" aria-labelledby="demo-tab-web" data-demo-panel="web" hidden>
+                <div class="demo-intro">
+                  <div><p>Páginas y comercio digital</p><h3>Diseño y desarrollo para cada objetivo.</h3></div>
+                  <span>Alterná el caso y el dispositivo.</span>
+                </div>
+                <div class="demo-controls-row">
+                  <div class="secondary-tabs" role="tablist" aria-label="Tipo de página" data-web-tabs>
+                    <button type="button" role="tab" aria-selected="true" aria-controls="web-preview-panel" id="web-tab-appointments" tabindex="0" data-web-preview="appointments">Turnos</button>
+                    <button type="button" role="tab" aria-selected="false" aria-controls="web-preview-panel" id="web-tab-restaurant" tabindex="-1" data-web-preview="restaurant">Restaurante</button>
+                    <button type="button" role="tab" aria-selected="false" aria-controls="web-preview-panel" id="web-tab-store" tabindex="-1" data-web-preview="store">Tienda</button>
+                  </div>
+                  <div class="device-switcher" role="group" aria-label="Vista del dispositivo">
+                    <button type="button" aria-pressed="true" data-device="desktop">Escritorio</button>
+                    <button type="button" aria-pressed="false" data-device="mobile">Móvil</button>
                   </div>
                 </div>
-              </div>
-              <div class="demo-toast" role="status" aria-live="polite" data-demo-toast hidden></div>
-            </div>
-          </section>
-
-          <section class="demo-panel" id="demo-panel-web" role="tabpanel" aria-labelledby="demo-tab-web" data-demo-panel="web" hidden>
-            <div class="demo-intro">
-              <div>
-                <p class="demo-kicker">Páginas y comercio digital</p>
-                <h3>Una presencia digital también se adapta a cada objetivo.</h3>
-              </div>
-              <p>Exploración inicial preparada para incorporar recorridos completos en la próxima etapa.</p>
-            </div>
-            <div class="preview-switcher" role="tablist" aria-label="Tipo de página" data-web-tabs>
-              <button type="button" role="tab" aria-selected="true" aria-controls="web-preview-panel" id="web-tab-appointments" tabindex="0" data-web-preview="appointments">Servicio con turnos</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="web-preview-panel" id="web-tab-restaurant" tabindex="-1" data-web-preview="restaurant">Restaurante</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="web-preview-panel" id="web-tab-store" tabindex="-1" data-web-preview="store">Tienda</button>
-            </div>
-            <div class="website-preview preview-appointments" id="web-preview-panel" data-web-window role="tabpanel" aria-labelledby="web-tab-appointments" aria-live="polite">
-              <div class="browser-bar"><span></span><span></span><span></span><p data-web-url>turnos.local</p></div>
-              <div class="website-canvas">
-                <nav><strong data-web-brand>Estudio Bienestar</strong><span data-web-nav>Servicios&nbsp;&nbsp; Equipo&nbsp;&nbsp; Contacto</span></nav>
-                <div class="website-hero">
-                  <p data-web-eyebrow>Reservas simples</p>
-                  <h4 data-web-title>Elegí tu horario sin llamadas.</h4>
-                  <button type="button" data-web-cta>Ver turnos</button>
+                <div class="website-preview preview-appointments" id="web-preview-panel" data-web-window role="tabpanel" aria-labelledby="web-tab-appointments" aria-live="polite">
+                  <div class="browser-bar"><span></span><span></span><span></span><p data-web-url>turnos.local</p></div>
+                  <div class="website-canvas">
+                    <nav><strong data-web-brand>Estudio Bienestar</strong><span data-web-nav>Servicios&nbsp;&nbsp; Equipo&nbsp;&nbsp; Contacto</span></nav>
+                    <div class="website-hero"><p data-web-eyebrow>Reservas simples</p><h4 data-web-title>Elegí tu horario sin llamadas.</h4><button type="button" data-web-cta>Ver turnos</button></div>
+                    <div class="website-items" data-web-items></div>
+                  </div>
+                  <div class="phone-preview" aria-label="Vista móvil simulada">
+                    <div class="phone-speaker"></div><strong data-phone-brand>Estudio Bienestar</strong><h4 data-phone-title>Tu próximo turno, en minutos.</h4><button type="button" data-phone-cta>Reservar</button>
+                  </div>
+                  <div class="preview-feedback" role="status" aria-live="polite" data-web-feedback hidden></div>
                 </div>
-                <div class="website-items" data-web-items></div>
-              </div>
-              <div class="phone-preview" aria-label="Vista móvil simulada">
-                <div class="phone-speaker"></div>
-                <strong data-phone-brand>Estudio Bienestar</strong>
-                <h4 data-phone-title>Tu próximo turno, en minutos.</h4>
-                <button type="button" data-phone-cta>Reservar</button>
-              </div>
-            </div>
-          </section>
+              </section>
 
-          <section class="demo-panel" id="demo-panel-operations" role="tabpanel" aria-labelledby="demo-tab-operations" data-demo-panel="operations" hidden>
-            <div class="demo-intro">
-              <div>
-                <p class="demo-kicker">Stock y operaciones</p>
-                <h3>Una misma acción, distintas formas de resolverla.</h3>
-              </div>
-              <p>Ejemplo inicial de cómo una herramienta puede adaptarse al lugar y al momento de uso.</p>
+              <section class="demo-panel" id="demo-panel-operations" role="tabpanel" aria-labelledby="demo-tab-operations" data-demo-panel="operations" hidden>
+                <div class="demo-intro">
+                  <div><p>Stock y operaciones</p><h3>Una misma acción, distintas formas de resolverla.</h3></div>
+                  <span>Simulá un ingreso de mercadería.</span>
+                </div>
+                <div class="secondary-tabs" role="tablist" aria-label="Forma de cargar información" data-method-tabs>
+                  <button type="button" role="tab" aria-selected="true" aria-controls="method-preview-panel" id="method-tab-form" tabindex="0" data-method="form">Formulario</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-scan" tabindex="-1" data-method="scan">Escaneo</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-voice" tabindex="-1" data-method="voice">Voz</button>
+                  <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-assistant" tabindex="-1" data-method="assistant">Asistente</button>
+                </div>
+                <div class="method-preview" id="method-preview-panel" role="tabpanel" aria-labelledby="method-tab-form" aria-live="polite" data-method-preview>
+                  <span class="method-icon" aria-hidden="true">01</span>
+                  <div class="method-copy"><p data-method-label>Carga directa</p><h4 data-method-title>Completá los datos del ingreso.</h4><span data-method-description>Una opción precisa para trabajar desde una computadora.</span></div>
+                  <div class="voice-wave" aria-hidden="true" data-voice-wave><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  <button type="button" data-method-action>Simular carga</button>
+                </div>
+                <p class="method-note">Son ejemplos de interacción aplicables a stock, turnos, consultas y otros sistemas. Ninguna acción modifica datos sin confirmación.</p>
+              </section>
             </div>
-            <div class="operation-workbench">
-              <div class="method-switcher" role="tablist" aria-label="Forma de cargar información" data-method-tabs>
-                <button type="button" role="tab" aria-selected="true" aria-controls="method-preview-panel" id="method-tab-form" tabindex="0" data-method="form">Formulario</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-scan" tabindex="-1" data-method="scan">Escaneo</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-voice" tabindex="-1" data-method="voice">Voz</button>
-                <button type="button" role="tab" aria-selected="false" aria-controls="method-preview-panel" id="method-tab-assistant" tabindex="-1" data-method="assistant">Asistente</button>
-              </div>
-              <div class="method-preview" id="method-preview-panel" role="tabpanel" aria-labelledby="method-tab-form" aria-live="polite" data-method-preview>
-                <span class="method-icon" aria-hidden="true">01</span>
-                <div><p data-method-label>Carga directa</p><h4 data-method-title>Completá los datos del ingreso.</h4><span data-method-description>Una opción precisa para trabajar desde una computadora.</span></div>
-                <button type="button" data-method-action>Simular carga</button>
-              </div>
-              <p class="method-note">Estos métodos son ejemplos: pueden integrarse en stock, turnos, consultas u otros sistemas cuando aporten valor.</p>
-            </div>
-          </section>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Familias comerciales explicadas con ejemplos visibles. -->
+    <section class="section solutions" id="soluciones" aria-labelledby="solutions-title">
+      <div class="shell">
+        <div class="solutions-intro">
+          <p class="section-index">02 / Soluciones</p>
+          <h2 id="solutions-title">Una necesidad.<br>Una forma más clara de resolverla.</h2>
+          <p>No hace falta pensar primero en tecnología. Alcanza con identificar qué debería funcionar mejor.</p>
+        </div>
+        <div class="solution-showcase">
+          <article class="solution-block solution-presence">
+            <div class="solution-visual browser-solution" aria-hidden="true">
+              <div class="solution-browser-bar"><i></i><i></i><i></i></div>
+              <div class="solution-page"><span></span><strong>Tu negocio,<br>bien presentado.</strong><button tabindex="-1">Consultar</button></div>
+            </div>
+            <span class="solution-number">01</span>
+            <h3>Mostrar mejor tu negocio</h3>
+            <p>Web, catálogo o reservas para que te encuentren, entiendan y contacten.</p>
+            <a href="#contacto">Necesito algo así <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="solution-block solution-organize">
+            <div class="solution-visual panel-solution" aria-hidden="true">
+              <div><small>Hoy</small><strong>18 pedidos</strong></div>
+              <ul><li><i></i>Confirmado<span>14:20</span></li><li><i></i>Preparando<span>14:35</span></li><li><i></i>Listo<span>14:48</span></li></ul>
+            </div>
+            <span class="solution-number">02</span>
+            <h3>Organizar cómo trabajás</h3>
+            <p>Turnos, stock, ventas o pedidos reunidos en una herramienta propia.</p>
+            <a href="#explorar">Explorar paneles <span aria-hidden="true">↑</span></a>
+          </article>
+          <article class="solution-block solution-simplify">
+            <div class="solution-visual flow-solution" aria-hidden="true">
+              <span>Pedido recibido</span><i></i><span>Datos ordenados</span><i></i><span>Acción preparada</span>
+            </div>
+            <span class="solution-number">03</span>
+            <h3>Simplificar tareas</h3>
+            <p>Pasos repetitivos que se conectan, preparan y confirman con menos esfuerzo.</p>
+            <a href="#explorar">Explorar operaciones <span aria-hidden="true">↑</span></a>
+          </article>
+        </div>
+        <p class="small-projects">También puede ser algo acotado: una landing, un catálogo, un formulario, una mejora puntual o una primera versión funcional.</p>
+      </div>
+    </section>
+
+    <!-- Etapas del trabajo y alcance posterior a la publicación. -->
     <section class="section process" id="proceso" aria-labelledby="process-title">
       <div class="shell">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">03 / Forma de trabajo</p>
-            <h2 id="process-title">De la necesidad a una solución que funciona.</h2>
-          </div>
-          <p>Un proceso claro permite revisar decisiones, ver avances y evitar complejidad innecesaria.</p>
+        <div class="process-copy">
+          <p class="section-index">03 / Cómo construimos</p>
+          <h2 id="process-title">Una solución puede empezar simple y seguir creciendo.</h2>
+          <p>Cada etapa tiene una intención distinta. Juntas convierten una necesidad en algo que se puede usar, probar y mejorar.</p>
         </div>
-        <ol class="process-list">
-          <li><span>01</span><div><h3>Entender</h3><p>Conocemos tu actividad, el problema actual y el resultado que buscás.</p></div></li>
-          <li><span>02</span><div><h3>Definir</h3><p>Delimitamos prioridades, alcance y una dirección visual adecuada.</p></div></li>
-          <li><span>03</span><div><h3>Construir</h3><p>Avanzamos por etapas funcionales para que puedas revisar el progreso.</p></div></li>
-          <li><span>04</span><div><h3>Validar y entregar</h3><p>Probamos, corregimos y preparamos la solución para usar y continuar.</p></div></li>
+        <ol class="process-list" data-reveal-list>
+          <li class="process-step step-understand">
+            <span>01</span><div><h3>Entender</h3><p>Miramos cómo trabajás hoy y qué necesitás cambiar.</p></div>
+            <div class="step-visual understand-visual" aria-hidden="true"><i></i><i></i><span>problema</span><span>contexto</span></div>
+          </li>
+          <li class="process-step step-design">
+            <span>02</span><div><h3>Diseñar</h3><p>Ordenamos la experiencia antes de construirla.</p></div>
+            <div class="step-visual design-visual" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          </li>
+          <li class="process-step step-build">
+            <span>03</span><div><h3>Construir</h3><p>Armamos partes funcionales que podés ver y revisar.</p></div>
+            <div class="step-visual build-visual" aria-hidden="true"><span></span><span></span><span></span></div>
+          </li>
+          <li class="process-step step-release">
+            <span>04</span><div><h3>Probar y continuar</h3><p>Corregimos, publicamos y dejamos una base lista para crecer.</p></div>
+            <div class="step-visual release-visual" aria-hidden="true"><i>✓</i><i>✓</i><i>✓</i></div>
+          </li>
         </ol>
+        <div class="scope-note"><span>Después de publicar</span><p>El mantenimiento puede incluir correcciones, backups y soporte acordado. Nuevas funciones y ampliaciones se definen aparte.</p></div>
       </div>
     </section>
 
-    <section class="section continuity" aria-labelledby="continuity-title">
-      <div class="shell continuity-grid">
-        <div>
-          <p class="eyebrow">04 / Evolución</p>
-          <h2 id="continuity-title">Un proyecto puede empezar pequeño y crecer cuando haga falta.</h2>
-          <p>Según el proyecto, podemos acompañar desde la definición y el diseño hasta la publicación y el mantenimiento.</p>
-        </div>
-        <div class="continuity-details">
-          <article><h3>Mantenimiento acordado</h3><p>Puede contemplar correcciones, backups, monitoreo o soporte para conservar el funcionamiento.</p></article>
-          <article><h3>Nuevas mejoras</h3><p>Funciones nuevas, rediseños y ampliaciones se definen por separado para mantener el alcance claro.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section work" id="trabajo" aria-labelledby="work-title">
-      <div class="shell">
-        <div class="section-heading">
-          <div><p class="eyebrow">05 / Producto propio</p><h2 id="work-title">Una muestra de criterio y ejecución.</h2></div>
-          <p>Los proyectos propios permiten demostrar capacidades sin atribuir resultados o clientes inexistentes.</p>
-        </div>
-        <article class="case-study">
-          <figure class="case-visual">
-            <img src="assets/images/sugapp-workspace.webp" alt="Representación conceptual de una aplicación de Solitario y un panel de estadísticas" width="1672" height="941" loading="lazy">
-            <figcaption>Imagen conceptual. Las capturas reales se incorporarán con la presentación completa del proyecto.</figcaption>
-          </figure>
-          <div class="case-copy">
-            <p class="eyebrow">Producto propio / En desarrollo</p>
-            <h3>Solitario Hunting</h3>
-            <p class="case-lead">Una aplicación desarrollada desde cero, con reglas propias, estadísticas y seguimiento de partidas.</p>
-            <dl>
-              <div><dt>El desafío</dt><dd>Convertir un juego conocido en un producto con identidad, progreso y profundidad.</dd></div>
-              <div><dt>Lo construido</dt><dd>Experiencia de juego, reglas, historial, ranking y análisis de resultados.</dd></div>
-              <div><dt>Estado actual</dt><dd>Aplicación funcional en evolución, preparada para incorporar nuevas modalidades.</dd></div>
-            </dl>
-          </div>
-        </article>
-      </div>
-    </section>
-
+    <!-- Formulario local pendiente de conectar a los canales definitivos. -->
     <section class="contact" id="contacto" aria-labelledby="contact-title">
-      <div class="shell contact-grid">
-        <div><p class="eyebrow light">06 / Consulta</p><h2 id="contact-title">¿Qué parte de tu trabajo podría funcionar mejor?</h2></div>
-        <div class="contact-copy">
-          <p>No hace falta que llegues con una solución pensada. Contanos qué necesitás resolver y evaluamos una forma posible de avanzar.</p>
-          <p class="contact-status">Canal de contacto pendiente de confirmar antes de la publicación.</p>
+      <div class="shell contact-layout">
+        <div class="contact-heading">
+          <p class="eyebrow">04 / Empecemos por conversar</p>
+          <h2 id="contact-title">Contame qué necesitás.</h2>
+          <p>Podés escribir con una idea concreta, un problema que quieras resolver o algo que todavía no sepas cómo encarar.</p>
+          <div class="contact-prompts" aria-label="Ejemplos de consulta">
+            <button type="button" data-contact-prompt="Necesito una página o catálogo para mostrar mejor mi negocio.">Necesito una web</button>
+            <button type="button" data-contact-prompt="Quiero ordenar turnos, pedidos, stock o ventas en un solo lugar.">Quiero ordenar mi trabajo</button>
+            <button type="button" data-contact-prompt="Tengo una idea y quiero convertirla en una primera versión funcional.">Tengo una idea</button>
+          </div>
+          <div class="contact-context" data-contact-context hidden><span>Consulta relacionada con:</span><strong data-contact-context-value></strong></div>
+        </div>
+        <form class="contact-form" data-contact-form>
+          <label>Nombre<input type="text" name="name" autocomplete="name" required></label>
+          <label>Email o medio de contacto<input type="text" name="contact" autocomplete="email" required></label>
+          <label>Mensaje<textarea name="message" rows="5" required></textarea></label>
+          <label class="optional-field">Tipo de solución <select name="type"><option value="">Todavía no lo sé</option><option>Página o catálogo</option><option>Sistema o panel</option><option>Automatización</option><option>Primera versión de una idea</option></select></label>
+          <button class="button button-accent" type="submit">Preparar consulta <span aria-hidden="true">↗</span></button>
+          <p class="form-status" role="status" aria-live="polite" data-form-status>El canal definitivo de WhatsApp y email se habilitará antes de publicar.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section evidence" id="trabajo" aria-labelledby="evidence-title">
+      <div class="shell">
+        <div class="evidence-heading">
+          <p class="section-index">05 / Capacidad y producto</p>
+          <h2 id="evidence-title">Cosas que ya podemos construir.</h2>
+          <p>Productos propios, trabajo en desarrollo y formatos listos para adaptarse.</p>
+        </div>
+        <div class="evidence-grid">
+          <details class="evidence-card evidence-orders">
+            <summary>
+              <span class="evidence-tag">Producto en desarrollo</span>
+              <div class="evidence-preview order-preview" aria-hidden="true"><div><span>#042</span><b>2 milanesas</b><em>Preparando</em></div><div><span>#043</span><b>1 pizza</b><em>Nuevo</em></div><div><span>#044</span><b>Empanadas</b><em>Nuevo</em></div></div>
+              <strong>Pedidos para rotiserías</strong><p>Del pedido por WhatsApp a una operación ordenada.</p><i aria-hidden="true">+</i>
+            </summary>
+            <div class="evidence-detail"><p>La primera etapa arma el pedido y lo envía por WhatsApp. La siguiente está pensada para recibirlo en un panel, organizar estados y acompañar la preparación.</p></div>
+          </details>
+          <details class="evidence-card evidence-web">
+            <summary>
+              <span class="evidence-tag">Capacidad demostrable</span>
+              <div class="evidence-preview landing-preview" aria-hidden="true"><div><small>Marca</small><span></span></div><h4>Una página clara<br>para cada negocio.</h4><button tabindex="-1">Consultar</button></div>
+              <strong>Landings y catálogos</strong><p>Diseño, estructura, responsive e interacción.</p><i aria-hidden="true">+</i>
+            </summary>
+            <div class="evidence-detail"><p>Formatos adaptables para profesionales, comercios, restaurantes y servicios. No representa un cliente específico.</p></div>
+          </details>
         </div>
       </div>
     </section>
@@ -322,8 +354,8 @@
 
   <footer>
     <div class="shell footer-row">
-      <a class="brand" href="#inicio" aria-label="SugApp, volver al inicio"><span class="brand-mark" aria-hidden="true">S</span><span>SugApp</span></a>
-      <p>Software a medida para necesidades reales.</p>
+      <a class="wordmark footer-wordmark" href="#inicio" aria-label="SugApp, volver al inicio">sugapp</a>
+      <p>Marca independiente de software y producto digital.</p>
       <p>© <span data-year></span> SugApp</p>
     </div>
   </footer>

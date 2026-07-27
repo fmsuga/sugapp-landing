@@ -1,4 +1,50 @@
 .DS_Store
 Thumbs.db
+
+# Material interno: nunca forma parte de la landing publica.
+SOM/
+POSITIONING.md
+PROJECT_STATE.md
+CONTENT_NEEDS.md
+sugapp_vision_y_plan.md
+CODEX_GUIDE.md
+internal/
+private/
+notes/
+docs/internal/
+
+# Variables de entorno y secretos.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.kdbx
+credentials.*
+secrets.*
+service-account*.json
+
+# Archivos temporales y salidas locales.
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+*.log
+.cache/
+tmp/
+temp/
+coverage/
+playwright-report/
+test-results/
+
+# Configuracion local de editores y sistema.
 .idea/
 .vscode/
+.fleet/
+*.code-workspace

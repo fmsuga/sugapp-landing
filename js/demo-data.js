@@ -1,3 +1,5 @@
+// Contenido ficticio separado de la lógica para poder sumar rubros sin
+// duplicar componentes ni modificar el renderizado.
 export const businessDashboards = {
   grocery: {
     name: "Despensa Norte",

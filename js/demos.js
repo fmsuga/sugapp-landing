@@ -1,5 +1,6 @@
 import { businessDashboards, operationMethods, websitePreviews } from "./demo-data.js";
 
+// Comportamiento compartido por todos los grupos de pestañas.
 const setupTabs = (container, selector, onSelect) => {
   const tabs = [...container.querySelectorAll(selector)];
 
@@ -28,10 +29,17 @@ const setupTabs = (container, selector, onSelect) => {
   });
 };
 
+// Pequeño helper para actualizar textos sin repetir querySelector.
 const setText = (root, selector, value) => {
   root.querySelector(selector).textContent = value;
 };
 
+// Informa a main.js qué familia y variante está viendo el visitante.
+const announceDemoChange = (family, variant) => {
+  window.dispatchEvent(new CustomEvent("sugapp:demo-change", { detail: { family, variant } }));
+};
+
+// Dibuja el panel usando la configuración del rubro seleccionado.
 const renderDashboard = (key) => {
   const data = businessDashboards[key];
   const dashboard = document.querySelector("[data-dashboard]");
@@ -77,8 +85,12 @@ const renderDashboard = (key) => {
       { duration: 260, easing: "ease-out" }
     );
   }
+  if (!dashboard.closest("[data-demo-panel]").hidden) {
+    announceDemoChange("Paneles", businessTab.textContent.trim());
+  }
 };
 
+// Actualiza la página simulada sin crear tres demos independientes.
 const renderWebsite = (key) => {
   const data = websitePreviews[key];
   const preview = document.querySelector("[data-web-window]");
@@ -97,8 +109,12 @@ const renderWebsite = (key) => {
   preview.querySelector("[data-web-items]").innerHTML = data.items.map((item, index) => `
     <div><span>0${index + 1}</span><strong>${item}</strong></div>
   `).join("");
+  if (!preview.closest("[data-demo-panel]").hidden) {
+    announceDemoChange("Páginas", tab.textContent.trim());
+  }
 };
 
+// Cambia el contenido de la demo de formulario, escaneo, voz o asistente.
 const renderMethod = (key) => {
   const data = operationMethods[key];
   const preview = document.querySelector("[data-method-preview]");
@@ -110,14 +126,22 @@ const renderMethod = (key) => {
   setText(preview, "[data-method-description]", data.description);
   setText(preview, "[data-method-action]", data.action);
   preview.dataset.activeMethod = key;
+  preview.classList.toggle("is-voice", key === "voice");
+  if (!preview.closest("[data-demo-panel]").hidden) {
+    announceDemoChange("Operaciones", tab.textContent.trim());
+  }
 };
 
+// Conecta las pestañas principales con cada panel de demostración.
 const initializeDemoPanels = () => {
   const tabsRoot = document.querySelector("[data-demo-tabs]");
   setupTabs(tabsRoot, "[data-demo-tab]", (tab) => {
     document.querySelectorAll("[data-demo-panel]").forEach((panel) => {
       panel.hidden = panel.dataset.demoPanel !== tab.dataset.demoTab;
     });
+    const activePanel = document.querySelector(`[data-demo-panel="${tab.dataset.demoTab}"]`);
+    const variant = activePanel.querySelector("[role='tab'][aria-selected='true']").textContent.trim();
+    announceDemoChange(tab.querySelector("strong").textContent.trim(), variant);
   });
 };
 
@@ -138,8 +162,26 @@ const initializeDashboard = () => {
 };
 
 const initializeWebPreview = () => {
+  const preview = document.querySelector("[data-web-window]");
   setupTabs(document.querySelector("[data-web-tabs]"), "[data-web-preview]", (tab) => {
     renderWebsite(tab.dataset.webPreview);
+  });
+
+  document.querySelectorAll("[data-device]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll("[data-device]").forEach((item) => {
+        item.setAttribute("aria-pressed", String(item === button));
+      });
+      preview.classList.toggle("show-mobile", button.dataset.device === "mobile");
+    });
+  });
+
+  preview.querySelectorAll("[data-web-cta], [data-phone-cta]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const feedback = preview.querySelector("[data-web-feedback]");
+      feedback.textContent = "Interacción simulada: el siguiente paso abriría el recorrido correspondiente.";
+      feedback.hidden = false;
+    });
   });
 };
 
@@ -153,6 +195,7 @@ const initializeOperationPreview = () => {
   });
 };
 
+// Punto de entrada público que main.js ejecuta al cargar la página.
 export const initializeDemos = () => {
   initializeDemoPanels();
   initializeDashboard();
@@ -161,4 +204,15 @@ export const initializeDemos = () => {
   renderDashboard("grocery");
   renderWebsite("appointments");
   renderMethod("form");
+};
+
+// Devuelve todas las demos a su estado inicial al cerrar el laboratorio.
+export const resetDemos = () => {
+  document.querySelector("[data-demo-tab='dashboard']").click();
+  document.querySelector("[data-business='grocery']").click();
+  document.querySelector("[data-web-preview='appointments']").click();
+  document.querySelector("[data-method='form']").click();
+  document.querySelector("[data-device='desktop']").click();
+  document.querySelector("[data-demo-toast]").hidden = true;
+  document.querySelector("[data-web-feedback]").hidden = true;
 };
