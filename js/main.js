@@ -2,31 +2,49 @@ import { initializeDemos, resetDemos } from "./demos.js";
 
 // Elementos globales que usa la experiencia interactiva.
 const year = document.querySelector("[data-year]");
-const intro = document.querySelector("[data-brand-intro]");
 const lab = document.querySelector("[data-demo-lab]");
 const expandButton = document.querySelector("[data-lab-expand]");
+const hero = document.querySelector(".hero");
+const heroScroll = document.querySelector(".hero-scroll");
+const demoHeading = document.querySelector(".demo-heading");
 let demoFocusOrigin = null;
 
-// Muestra la presentación de SugApp una sola vez por sesión.
+// Deja ver primero la imagen y luego habilita la entrada escalonada del hero.
 const initializeIntro = () => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let alreadySeen = false;
-  try {
-    alreadySeen = sessionStorage.getItem("sugapp-intro-seen") === "true";
-    sessionStorage.setItem("sugapp-intro-seen", "true");
-  } catch {
-    alreadySeen = false;
-  }
+  window.setTimeout(() => {
+    heroScroll.classList.add("is-ready");
+    heroScroll.removeAttribute("tabindex");
+  }, 5000);
 
-  if (reducedMotion || alreadySeen) {
-    intro.remove();
+  if (reducedMotion) {
     document.documentElement.classList.add("hero-ready");
     return;
   }
 
-  window.setTimeout(() => document.documentElement.classList.add("hero-ready"), 720);
-  window.setTimeout(() => intro.classList.add("is-leaving"), 620);
-  window.setTimeout(() => intro.remove(), 1250);
+  window.setTimeout(() => document.documentElement.classList.add("hero-ready"), 520);
+};
+
+// Oculta las flechas cuando el hero ya quedó por encima del viewport.
+const updateHeroScrollVisibility = () => {
+  const isPastHero = hero.getBoundingClientRect().bottom <= 8;
+  heroScroll.classList.toggle("is-past-hero", isPastHero);
+};
+
+// Oscurece sólo la fotografía de forma progresiva mientras salimos del hero.
+const updateHeroImageDarkness = () => {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scrolledInsideHero = Math.max(0, -hero.getBoundingClientRect().top);
+  const progress = reducedMotion ? 0 : Math.min(1, scrolledInsideHero / (hero.offsetHeight * .45));
+  hero.style.setProperty("--hero-scroll-darkness", (progress * .86).toFixed(3));
+};
+
+// Lleva el encabezado del laboratorio cerca del borde superior, no sólo la sección.
+const scrollToDemoHeading = (event) => {
+  event.preventDefault();
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const targetTop = window.scrollY + demoHeading.getBoundingClientRect().top - 36;
+  window.scrollTo({ top: targetTop, behavior: reducedMotion ? "auto" : "smooth" });
 };
 
 const closeDemoLab = ({ restoreFocus = true } = {}) => {
@@ -130,6 +148,8 @@ initializeIntro();
 initializeProcessReveal();
 initializeDemos();
 initializeContact();
+updateHeroScrollVisibility();
+updateHeroImageDarkness();
 year.textContent = new Date().getFullYear();
 
 expandButton.addEventListener("click", () => {
@@ -140,6 +160,10 @@ expandButton.addEventListener("click", () => {
 window.addEventListener("sugapp:demo-change", (event) => {
   document.querySelector("[data-lab-location]").textContent = `${event.detail.family} / ${event.detail.variant}`;
 });
+
+window.addEventListener("scroll", updateHeroScrollVisibility, { passive: true });
+window.addEventListener("scroll", updateHeroImageDarkness, { passive: true });
+heroScroll.addEventListener("click", scrollToDemoHeading);
 
 // Escape cierra primero la experiencia ampliada.
 document.addEventListener("keydown", (event) => {
