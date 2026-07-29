@@ -12,14 +12,41 @@ const visualTemplates = {
 };
 export const createProductVisual=(type,context="card")=>`<div class="product-visual product-visual-${escapeHtml(type)} product-visual-${context}" aria-hidden="true">${(visualTemplates[type]||visualTemplates.dashboard)()}</div>`;
 
-export const renderFamilyExplorers=(families,products,container)=>{
-  container.innerHTML=families.map((family,familyIndex)=>{
-    const items=products.filter(product=>product.family===family.id);
-    return `<article class="family-explorer reveal" id="${family.id}" style="--family-color:${family.color}" data-family-explorer data-index="0">
-      <div class="family-copy"><p class="family-label">0${familyIndex+1} / ${escapeHtml(family.name)}</p><h3>${escapeHtml(family.name)}</h3><p><strong>${escapeHtml(family.subtitle)}</strong></p><p>${escapeHtml(family.description)}</p><div class="solution-pills" aria-label="Soluciones de ${escapeHtml(family.name)}">${items.map((item,index)=>`<button type="button" class="${index===0?"is-active":""}" data-stage-index="${index}">${escapeHtml(item.name)}</button>`).join("")}</div></div>
-      <div class="product-stage" tabindex="0" aria-label="Explorador de ${escapeHtml(family.name)}" data-product-stage>${items.map((item,index)=>`<article class="stage-card ${index===0?"is-active":""}" style="--offset:${index};--distance:${index}" data-stage-card data-product-slug="${escapeHtml(item.slug)}" aria-hidden="${index!==0}">${createProductVisual(item.visualType)}<footer><strong>${escapeHtml(item.name)}</strong><button type="button" data-open-product="${escapeHtml(item.slug)}">Explorar solución <span aria-hidden="true">↗</span></button></footer></article>`).join("")}<div class="stage-controls"><button type="button" data-stage-prev aria-label="Solución anterior">←</button><button type="button" data-stage-next aria-label="Solución siguiente">→</button></div></div>
-    </article>`;
-  }).join("");
+const featuredByFamily={
+  presencia:["landing-page","sitio-institucional","catalogo-online","tienda-online","portal-reservas"],
+  gestion:["sistema-turnos","gestion-pedidos","control-stock","gestion-clientes","sistema-rubro"],
+  automatizacion:["bot-whatsapp","recordatorios","formularios-inteligentes","integracion-web-gestion","flujos-personalizados"]
+};
+
+export const renderUniverseExplorer=(families,products,container)=>{
+  container.innerHTML=`<div class="universe-explorer reveal" data-universe-explorer>
+    <div class="universe-panels">
+      ${families.map((family,familyIndex)=>{
+        const allItems=products.filter(product=>product.family===family.id);
+        const featured=(featuredByFamily[family.id]||[]).map(slug=>products.find(product=>product.slug===slug)).filter(Boolean);
+        const previewSlug={presencia:"landing-page",gestion:"sistema-turnos",automatizacion:"integracion-web-gestion"}[family.id];
+        const lead=products.find(product=>product.slug===previewSlug)||featured[0]||allItems[0];
+        return `<article class="universe-panel universe-panel-${escapeHtml(family.id)}" id="${escapeHtml(family.id)}" style="--family-color:${family.color}" data-universe-panel="${escapeHtml(family.id)}">
+          <button class="universe-trigger" type="button" data-universe-trigger="${escapeHtml(family.id)}" aria-expanded="false" aria-controls="universe-content-${escapeHtml(family.id)}">
+            <span class="universe-index">0${familyIndex+1}</span>
+            <span class="universe-heading"><strong>${escapeHtml(family.name)}</strong><small>${escapeHtml(family.subtitle)}</small></span>
+            <span class="universe-action">Explorar <i aria-hidden="true">↗</i></span>
+          </button>
+          <div class="universe-preview" aria-hidden="true">${createProductVisual(lead.visualType,"universe")}</div>
+          <div class="universe-content" id="universe-content-${escapeHtml(family.id)}">
+            <div class="universe-content-bar"><p>Algunas formas de empezar</p><button type="button" data-universe-close>Volver a las tres familias <span aria-hidden="true">×</span></button></div>
+            <div class="universe-solutions">
+              ${featured.map((product,index)=>`<button class="universe-solution" type="button" data-open-product="${escapeHtml(product.slug)}">
+                <span class="universe-solution-visual">${createProductVisual(product.visualType,"universe-card")}</span>
+                <span class="universe-solution-copy"><small>0${index+1}</small><strong>${escapeHtml(product.name)}</strong><span>${escapeHtml(product.shortBenefit)}</span></span>
+              </button>`).join("")}
+            </div>
+            <p class="universe-more">Más posibilidades según tu proyecto y tu forma de trabajar.</p>
+          </div>
+        </article>`;
+      }).join("")}
+    </div>
+  </div>`;
 };
 
 const list=(items,className)=>items?.length?`<ul class="${className}">${items.map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul>`:"";
