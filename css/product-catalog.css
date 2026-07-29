@@ -1,0 +1,224 @@
+/* =========================================================
+   CATÁLOGO DE SOLUCIONES
+   Grilla pública y representaciones visuales de producto.
+   ========================================================= */
+.product-catalog-section {
+  position: relative;
+  padding: 104px 0 132px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+  background: #0e110f;
+  scroll-margin-top: 0;
+}
+
+.catalog-heading {
+  display: grid;
+  margin-bottom: 48px;
+  grid-template-columns: 190px minmax(0, 1fr);
+  align-items: start;
+  gap: 34px;
+}
+
+.product-section-index {
+  margin: 8px 0 0;
+  color: var(--color-accent);
+  font: 500 .64rem/1.5 var(--mono);
+  text-transform: uppercase;
+}
+
+.catalog-heading h2 {
+  max-width: none;
+  margin: 0;
+  font-size: 2.8rem;
+  white-space: nowrap;
+}
+
+.catalog-heading > div > p {
+  max-width: 680px;
+  margin: 16px 0 0;
+  color: var(--color-text-muted);
+  font-size: .86rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 430px;
+  padding: 0;
+  overflow: hidden;
+  flex-direction: column;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #151816;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .25s ease, transform .25s ease, background .25s ease;
+}
+
+.product-card:hover {
+  z-index: 1;
+  border-color: rgb(183 255 60 / .5);
+  background: #191d19;
+  transform: translateY(-4px);
+}
+
+.product-card:focus-visible { outline-offset: 5px; }
+
+.product-card-copy {
+  display: grid;
+  min-height: 138px;
+  padding: 22px;
+  grid-template-columns: 30px 1fr;
+  align-content: start;
+  column-gap: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.product-card-copy small {
+  grid-row: 1 / 3;
+  padding-top: 4px;
+  color: #717970;
+  font: .58rem var(--mono);
+}
+
+.product-card-copy strong {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.product-card-copy > span {
+  max-width: 270px;
+  margin-top: 8px;
+  color: var(--color-text-muted);
+  font-size: .7rem;
+  line-height: 1.55;
+}
+
+/* Lienzo compartido por las miniaturas del catálogo y las vistas de detalle. */
+.product-visual {
+  position: relative;
+  min-height: 290px;
+  overflow: hidden;
+  flex: 1;
+  color: #17201b;
+  background: #e8ebe5;
+  font-family: var(--sans);
+}
+
+.product-visual small { font-size: .5rem; }
+.product-visual strong, .product-visual b { font-weight: 600; }
+.mock-appbar {
+  display: flex;
+  min-height: 42px;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(23 32 27 / .1);
+  background: rgb(255 255 255 / .65);
+}
+.mock-appbar strong { font-size: .66rem; }
+.mock-appbar small { color: #747d76; }
+
+/* Landing page. */
+.product-visual-landing { color: #f6f2e8; background: #172925; }
+.mock-browser { display: flex; height: 34px; padding: 0 12px; align-items: center; gap: 5px; background: #f7f5ee; }
+.mock-browser > span { width: 5px; height: 5px; border-radius: 50%; background: #a8aaa4; }
+.mock-browser small { margin-inline: auto; color: #7b7e78; }
+.mock-landing { min-height: 256px; padding: 42px 25px; background: radial-gradient(circle at 82% 35%, #d4e2bd 0 13%, transparent 13.5%), #17312b; }
+.mock-landing i { display: block; color: #adc3b7; font: normal .48rem var(--mono); text-transform: uppercase; }
+.mock-landing strong { display: block; max-width: 210px; margin-top: 15px; font-size: 1.45rem; line-height: 1.05; }
+.mock-landing > span { display: inline-block; margin-top: 25px; padding: 8px 11px; color: #17312b; background: #d9f783; font-size: .52rem; font-weight: 700; }
+.mock-landing div { position: absolute; right: 26px; bottom: 22px; width: 82px; height: 110px; border: 1px solid rgb(255 255 255 / .3); background: #a4b8a0; transform: rotate(4deg); }
+
+/* Turnos. */
+.product-visual-appointments { background: #eeeae6; }
+.mock-calendar { display: grid; padding: 18px; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+.mock-calendar b { padding: 4px; color: #7d7772; font-size: .46rem; text-align: center; }
+.mock-calendar i { min-height: 41px; border: 1px solid #d6d0cb; background: #f8f6f3; }
+.mock-calendar i.booked { border-color: #916376; background: #cda6b7; box-shadow: inset 0 0 0 5px #f1e6eb; }
+.mock-floating { position: absolute; right: 14px; bottom: 14px; display: grid; width: 145px; padding: 11px; color: white; background: #3c3338; box-shadow: 0 10px 25px rgb(0 0 0 / .18); }
+.mock-floating small { color: #c7bdc2; }.mock-floating strong { margin-top: 4px; font-size: .58rem; }
+
+/* Stock. */
+.product-visual-stock { background: #e8ece8; }
+.mock-metrics { display: grid; padding: 14px 16px 8px; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mock-metrics span { display: grid; padding: 11px; border: 1px solid rgb(23 32 27 / .1); background: white; }
+.mock-metrics small { color: #778079; }.mock-metrics b { font-size: 1rem; }
+.mock-table { display: grid; margin: 5px 16px 16px; grid-template-columns: 1fr auto; font-size: .55rem; }
+.mock-table > * { padding: 8px 6px; border-bottom: 1px solid #ccd3cd; font-style: normal; }
+.mock-table b { color: #758078; font-size: .48rem; text-transform: uppercase; }
+.mock-table i { color: #47715e; }.mock-table i.warning { color: #a65345; }
+
+/* Pedidos. */
+.product-visual-orders { background: #e9e8e3; }
+.mock-kanban { display: grid; padding: 16px 12px; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.mock-kanban > div { min-width: 0; padding: 8px; background: #dfe1dc; }
+.mock-kanban b { display: block; margin-bottom: 7px; color: #687068; font-size: .48rem; }
+.mock-kanban i { display: block; margin-top: 5px; padding: 9px 7px; overflow: hidden; background: #fff; box-shadow: 0 2px 6px rgb(0 0 0 / .05); font-size: .48rem; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Panel administrativo. */
+.product-visual-dashboard { display: grid; grid-template-columns: 50px 1fr; background: #e8edea; }
+.mock-side { display: flex; padding: 13px 10px; flex-direction: column; align-items: center; gap: 13px; color: white; background: #25332d; }
+.mock-side b { display: grid; width: 27px; height: 27px; place-items: center; background: #5b8d76; font-size: .5rem; }
+.mock-side i { width: 23px; height: 4px; background: rgb(255 255 255 / .18); }
+.mock-dashboard { min-width: 0; }
+.mock-chart { display: flex; height: 105px; margin: 8px 16px; padding: 15px 13px 0; align-items: end; gap: 7px; border: 1px solid rgb(23 32 27 / .1); background: white; }
+.mock-chart i { width: 100%; height: var(--height); background: #5b8d76; }
+
+/* Automatizaciones. */
+.product-visual-automation { display: grid; padding: 36px 20px 20px; align-content: center; background: #171d1a; color: white; }
+.mock-flow { display: flex; align-items: center; justify-content: center; }
+.mock-flow span { display: grid; width: 82px; min-height: 72px; padding: 10px; align-content: center; border: 1px solid rgb(255 255 255 / .14); background: #242c27; }
+.mock-flow small { color: #89928c; }.mock-flow b { margin-top: 5px; font-size: .52rem; line-height: 1.3; }
+.mock-flow > i { width: 20px; height: 1px; background: #b7ff3c; }
+.mock-run { display: grid; margin-top: 30px; padding: 11px; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; border-top: 1px solid rgb(255 255 255 / .1); color: #aeb5b0; font-size: .5rem; }
+.mock-run i { width: 7px; height: 7px; border-radius: 50%; background: #b7ff3c; }
+
+/* Asistente. */
+.product-visual-assistant { display: grid; padding: 14px; grid-template-columns: 1fr 96px; gap: 8px; color: #e8ece8; background: #202620; }
+.mock-chat { min-width: 0; background: #f3f4f0; color: #1a201b; }
+.mock-chat p { max-width: 82%; margin: 13px; padding: 9px; border: 1px solid #d9ddd7; font-size: .52rem; }
+.mock-chat p.answer { margin-left: auto; border: 0; background: #dfe8d8; }
+.mock-chat > span { display: block; margin: 20px 12px 10px; padding: 8px; color: #8a918b; border: 1px solid #d9ddd7; font-size: .48rem; }
+.mock-context { display: flex; padding: 12px 9px; flex-direction: column; gap: 7px; border: 1px solid rgb(255 255 255 / .1); }
+.mock-context small { margin-bottom: 5px; color: #858d87; }.mock-context b { padding: 7px; background: rgb(255 255 255 / .06); font-size: .48rem; }
+
+/* Formularios. */
+.product-visual-forms { padding: 14px; background: #dfe6e1; }
+.mock-form { position: relative; max-width: 230px; min-height: 265px; margin: auto; background: #fff; box-shadow: 0 12px 35px rgb(27 40 31 / .12); }
+.mock-form label { display: grid; margin: 11px 15px; gap: 4px; color: #69736c; font-size: .45rem; }
+.mock-form label span { padding: 7px; color: #9aa19c; border: 1px solid #dfe3df; }
+.mock-form-action { display: inline-block; margin: 2px 15px; padding: 7px 11px; color: white; background: #315d49; font-size: .48rem; }
+.mock-validation { position: absolute; right: 10px; bottom: 18px; display: flex; padding: 8px 10px; align-items: center; gap: 7px; color: white; background: #244435; font-size: .5rem; box-shadow: 0 8px 20px rgb(0 0 0 / .16); }
+.mock-validation i { color: #b7ff3c; font-style: normal; }
+
+@media (max-width: 1180px) {
+  .catalog-heading { grid-template-columns: 1fr; gap: 14px; }
+  .catalog-heading h2 { font-size: 2.35rem; }
+  .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .product-catalog-section { padding-block: 88px 104px; }
+  .catalog-heading { grid-template-columns: 1fr; gap: 14px; }
+  .catalog-heading h2 { white-space: normal; }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 620px) {
+  .product-catalog-section { padding-block: 76px 88px; }
+  .catalog-heading { margin-bottom: 34px; }
+  .catalog-heading h2 { font-size: 2rem; }
+  .product-grid { grid-template-columns: 1fr; gap: 12px; }
+  .product-card { min-height: 410px; }
+  .product-card-copy { min-height: 120px; }
+  .mock-flow span { width: 90px; }
+}
