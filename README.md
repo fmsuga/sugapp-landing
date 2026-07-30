@@ -1,24 +1,17 @@
-# SugApp
+# SugApp Landing Page
 
-Landing pública e interactiva de SugApp.
+The public landing page for SugApp, showcasing its digital solutions for businesses and professionals through an interactive product catalog.
 
-Presenta soluciones digitales para negocios y profesionales mediante un catálogo extensible. Cada producto abre una experiencia propia con beneficios, aplicaciones, alcance, evolución y contacto.
+## Live Demo
 
-## Ejecución local
+[Visit the website](https://fmsuga.github.io/sugapp-landing/)
 
-El proyecto usa HTML, CSS y JavaScript nativos. Para servir los módulos ES:
+## Run Locally
+
+This project is built with HTML, CSS, and JavaScript. Start a local server from the project directory:
 
 ```bash
 python -m http.server 4173
 ```
 
-Luego abrí `http://localhost:4173`.
-
-## Estructura
-
-- `index.html`: estructura general de la landing y contenedor del catálogo.
-- `css/product-catalog.css`: grilla y representaciones de productos.
-- `css/product-detail.css`: experiencia fullscreen de cada producto.
-- `js/product-data.js`: contenido estructurado y extensible.
-- `js/product-catalog.js`: componentes visuales y renderizado.
-- `js/product-navigation.js`: hash, historial, foco y apertura/cierre.
+Then open [http://localhost:4173](http://localhost:4173).
