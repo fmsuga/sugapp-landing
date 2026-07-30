@@ -4,7 +4,7 @@ import { renderProductDetail } from "./product-catalog.js";
 const productHashPrefix = "#solucion/";
 
 export const initializeProductNavigation = () => {
-  const grid = document.querySelector("[data-family-explorers]");
+  const grid = document.querySelector("[data-project-gallery]");
   const experience = document.querySelector("[data-product-experience]");
   const content = document.querySelector("[data-product-content]");
   const closeButton = document.querySelector("[data-product-close]");

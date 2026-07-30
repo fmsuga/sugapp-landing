@@ -12,41 +12,35 @@ const visualTemplates = {
 };
 export const createProductVisual=(type,context="card")=>`<div class="product-visual product-visual-${escapeHtml(type)} product-visual-${context}" aria-hidden="true">${(visualTemplates[type]||visualTemplates.dashboard)()}</div>`;
 
-const featuredByFamily={
-  presencia:["landing-page","sitio-institucional","catalogo-online","tienda-online","portal-reservas"],
-  gestion:["sistema-turnos","gestion-pedidos","control-stock","gestion-clientes","sistema-rubro"],
-  automatizacion:["bot-whatsapp","recordatorios","formularios-inteligentes","integracion-web-gestion","flujos-personalizados"]
-};
+const galleryProjects = [
+  { slug:"landing-page", title:"Landing o sitio web", audience:"Servicios, profesionales y negocios que necesitan presentarse mejor.", start:"Una página clara y enfocada", grow:"Nuevas secciones, formularios o reservas", size:"feature" },
+  { slug:"catalogo-online", title:"Catálogo o tienda online", audience:"Comercios y marcas que quieren mostrar o vender sus productos.", start:"Un catálogo compartible", grow:"Pedidos, pagos, stock y seguimiento", size:"wide" },
+  { slug:"sistema-turnos", title:"Turnos y reservas", audience:"Profesionales, centros y equipos que trabajan con agenda.", start:"Agenda y disponibilidad", grow:"Reservas online, recordatorios y pagos", size:"tall" },
+  { slug:"gestion-pedidos", title:"Gestión de pedidos", audience:"Negocios que reciben, preparan y entregan pedidos.", start:"Estados y seguimiento interno", grow:"Avisos, clientes, entregas e integraciones", size:"standard" },
+  { slug:"control-stock", title:"Control de stock", audience:"Comercios y operaciones que necesitan conocer cada movimiento.", start:"Productos, entradas y salidas", grow:"Alertas, proveedores y pedidos", size:"standard" },
+  { slug:"automatizacion-consultas", title:"Automatización de consultas", audience:"Equipos que repiten respuestas y pierden contexto entre mensajes.", start:"Respuestas y derivaciones simples", grow:"Condiciones, datos y acciones automáticas", size:"wide" },
+  { slug:"integracion-web-gestion", title:"Integraciones", audience:"Negocios que hoy cargan la misma información en varias herramientas.", start:"Conectar dos puntos del proceso", grow:"Un flujo completo entre sistemas", size:"standard" },
+  { slug:"sistema-rubro", title:"Sistema a medida", audience:"Podemos diseñar una solución alrededor de la forma en que funciona tu negocio.", start:"Un módulo para la necesidad principal", grow:"Un sistema conectado que evoluciona con vos", size:"custom" }
+];
 
-export const renderUniverseExplorer=(families,products,container)=>{
-  container.innerHTML=`<div class="universe-explorer reveal" data-universe-explorer>
-    <div class="universe-panels">
-      ${families.map((family,familyIndex)=>{
-        const allItems=products.filter(product=>product.family===family.id);
-        const featured=(featuredByFamily[family.id]||[]).map(slug=>products.find(product=>product.slug===slug)).filter(Boolean);
-        const previewSlug={presencia:"landing-page",gestion:"sistema-turnos",automatizacion:"integracion-web-gestion"}[family.id];
-        const lead=products.find(product=>product.slug===previewSlug)||featured[0]||allItems[0];
-        return `<article class="universe-panel universe-panel-${escapeHtml(family.id)}" id="${escapeHtml(family.id)}" style="--family-color:${family.color}" data-universe-panel="${escapeHtml(family.id)}">
-          <button class="universe-trigger" type="button" data-universe-trigger="${escapeHtml(family.id)}" aria-expanded="false" aria-controls="universe-content-${escapeHtml(family.id)}">
-            <span class="universe-index">0${familyIndex+1}</span>
-            <span class="universe-heading"><strong>${escapeHtml(family.name)}</strong><small>${escapeHtml(family.subtitle)}</small></span>
-            <span class="universe-action">Explorar <i aria-hidden="true">↗</i></span>
-          </button>
-          <div class="universe-preview" aria-hidden="true">${createProductVisual(lead.visualType,"universe")}</div>
-          <div class="universe-content" id="universe-content-${escapeHtml(family.id)}">
-            <div class="universe-content-bar"><p>Algunas formas de empezar</p><button type="button" data-universe-close>Volver a las tres familias <span aria-hidden="true">×</span></button></div>
-            <div class="universe-solutions">
-              ${featured.map((product,index)=>`<button class="universe-solution" type="button" data-open-product="${escapeHtml(product.slug)}">
-                <span class="universe-solution-visual">${createProductVisual(product.visualType,"universe-card")}</span>
-                <span class="universe-solution-copy"><small>0${index+1}</small><strong>${escapeHtml(product.name)}</strong><span>${escapeHtml(product.shortBenefit)}</span></span>
-              </button>`).join("")}
-            </div>
-            <p class="universe-more">Más posibilidades según tu proyecto y tu forma de trabajar.</p>
-          </div>
-        </article>`;
-      }).join("")}
-    </div>
-  </div>`;
+export const renderProjectGallery=(products,container)=>{
+  if(!container)return;
+  const projects=galleryProjects.map(project=>({...project,product:products.find(product=>product.slug===project.slug)})).filter(project=>project.product);
+  container.innerHTML=projects.map((project,index)=>{
+    const custom=project.size==="custom";
+    return `<button class="project-piece project-piece--${escapeHtml(project.size)} reveal" type="button" data-open-product="${escapeHtml(project.product.slug)}" aria-label="Explorar ${escapeHtml(project.title)}">
+      <span class="project-piece-visual">${createProductVisual(project.product.visualType,"project")}</span>
+      <span class="project-piece-copy">
+        <small>${String(index+1).padStart(2,"0")}</small>
+        ${custom?`<span class="project-piece-question">¿Tu necesidad no encaja exactamente en estas opciones?</span>`:""}
+        <strong>${escapeHtml(project.title)}</strong>
+        <span class="project-piece-benefit">${escapeHtml(custom?project.audience:project.product.shortBenefit)}</span>
+        ${custom?"":`<span class="project-piece-audience">${escapeHtml(project.audience)}</span>`}
+        <span class="project-piece-path"><span><b>Puede empezar</b>${escapeHtml(project.start)}</span><span><b>Puede crecer</b>${escapeHtml(project.grow)}</span></span>
+        <span class="project-piece-action">${custom?"Explorar una solución a medida":"Explorar proyecto"} <i aria-hidden="true">↗</i></span>
+      </span>
+    </button>`;
+  }).join("");
 };
 
 const list=(items,className)=>items?.length?`<ul class="${className}">${items.map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul>`:"";

@@ -1,13 +1,13 @@
-import { families, products } from "./product-data.js";
-import { renderUniverseExplorer } from "./product-catalog.js";
+import { products } from "./product-data.js";
+import { renderProjectGallery } from "./product-catalog.js";
 import { initializeProductNavigation } from "./product-navigation.js";
 import { publicNeeds, operationalNeeds } from "./client-messages.js";
 
 const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hero=document.querySelector(".hero");
 const heroScroll=document.querySelector(".hero-scroll");
-const explorerRoot=document.querySelector("[data-family-explorers]");
-renderUniverseExplorer(families,products,explorerRoot);
+const galleryRoot=document.querySelector("[data-project-gallery]");
+renderProjectGallery(products,galleryRoot);
 
 const initializeIntro=()=>{
   window.setTimeout(()=>{heroScroll.classList.add("is-ready");heroScroll.removeAttribute("tabindex");},reducedMotion?0:5000);
@@ -17,8 +17,25 @@ const initializeIntro=()=>{
 const updateHero=()=>{
   const rect=hero.getBoundingClientRect();
   heroScroll.classList.toggle("is-past-hero",rect.bottom<=8);
-  const progress=reducedMotion?0:Math.min(1,Math.max(0,-rect.top)/(hero.offsetHeight*.45));
-  hero.style.setProperty("--hero-scroll-darkness",(progress*.86).toFixed(3));
+  const rawProgress=reducedMotion?0:Math.min(1,Math.max(0,-rect.top)/hero.offsetHeight);
+  const expansionProgress=Math.min(1,rawProgress/.45);
+  hero.style.setProperty("--hero-scroll-darkness",(expansionProgress*.72).toFixed(3));
+  hero.style.setProperty("--hero-inset-x",`${(36*(1-expansionProgress)).toFixed(2)}px`);
+  hero.style.setProperty("--hero-margin-top",`${(24*(1-expansionProgress)).toFixed(2)}px`);
+  hero.style.setProperty("--hero-radius",`${(20*(1-expansionProgress)).toFixed(2)}px`);
+  hero.style.setProperty("--hero-height-offset",`${(48*(1-expansionProgress)).toFixed(2)}px`);
+  const contentTravel=Math.min(window.innerWidth*.085,128);
+  hero.style.setProperty("--hero-content-shift",`${(expansionProgress*contentTravel).toFixed(2)}px`);
+  const textFadeProgress=Math.min(1,Math.max(0,(rawProgress-.06)/.24));
+  const textFadeEase=textFadeProgress*textFadeProgress*(3-2*textFadeProgress);
+  const textVisibility=1-textFadeEase;
+  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-.48)/.24));
+  const actionsFadeEase=actionsFadeProgress*actionsFadeProgress*(3-2*actionsFadeProgress);
+  const actionsVisibility=1-actionsFadeEase;
+  const actionsFollow=Math.min(-rect.top,hero.offsetHeight*.1);
+  hero.style.setProperty("--hero-text-visibility",textVisibility.toFixed(3));
+  hero.style.setProperty("--hero-actions-visibility",actionsVisibility.toFixed(3));
+  hero.style.setProperty("--hero-actions-follow",`${actionsFollow.toFixed(2)}px`);
 };
 const initializeReveal=()=>{
   const elements=[...document.querySelectorAll(".reveal")];
@@ -26,32 +43,33 @@ const initializeReveal=()=>{
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("is-visible");observer.unobserve(entry.target);}}),{threshold:.12,rootMargin:"0px 0px -7%"});
   elements.forEach(el=>observer.observe(el));
 };
-const initializeExplorers=()=>{
-  const explorer=document.querySelector("[data-universe-explorer]");
-  if(!explorer)return;
-  const panels=[...explorer.querySelectorAll("[data-universe-panel]")];
-  const setActive=familyId=>{
-    explorer.classList.toggle("has-active",Boolean(familyId));
-    explorer.dataset.active=familyId||"";
-    panels.forEach(panel=>{
-      const active=panel.dataset.universePanel===familyId;
-      panel.classList.toggle("is-active",active);
-      panel.classList.toggle("is-condensed",Boolean(familyId)&&!active);
-      panel.querySelector("[data-universe-trigger]").setAttribute("aria-expanded",String(active));
-      const content=panel.querySelector(".universe-content");
-      content.setAttribute("aria-hidden",String(!active));
-      content.inert=!active;
-    });
-  };
-  explorer.addEventListener("click",event=>{
-    const trigger=event.target.closest("[data-universe-trigger]");
-    if(trigger){setActive(explorer.dataset.active===trigger.dataset.universeTrigger?"":trigger.dataset.universeTrigger);return;}
-    if(event.target.closest("[data-universe-close]"))setActive("");
+const initializeImprovementSelector=()=>{
+  const root=document.querySelector("[data-improvement-selector]");
+  if(!root)return;
+  const branches=[...root.querySelectorAll("[data-improvement-branch]")];
+  const triggers=branches.map(branch=>branch.querySelector("[data-improvement-trigger]"));
+  const setActive=activeBranch=>branches.forEach(branch=>{
+    const active=branch===activeBranch;
+    const trigger=branch.querySelector("[data-improvement-trigger]");
+    const panel=branch.querySelector("[data-improvement-panel]");
+    branch.classList.toggle("is-active",active);
+    trigger.setAttribute("aria-expanded",String(active));
+    panel.setAttribute("aria-hidden",String(!active));
+    panel.inert=!active;
   });
-  setActive("");
-  const syncMobileState=()=>{if(matchMedia("(max-width: 640px)").matches&&!explorer.dataset.active)setActive(families[0].id);};
-  syncMobileState();
-  addEventListener("resize",syncMobileState,{passive:true});
+  triggers.forEach((trigger,index)=>{
+    trigger.addEventListener("click",()=>{
+      const branch=branches[index];
+      setActive(branch.classList.contains("is-active")?null:branch);
+    });
+    trigger.addEventListener("keydown",event=>{
+      const destinations={ArrowDown:(index+1)%triggers.length,ArrowUp:(index-1+triggers.length)%triggers.length,Home:0,End:triggers.length-1};
+      if(!(event.key in destinations))return;
+      event.preventDefault();
+      triggers[destinations[event.key]].focus();
+    });
+  });
+  setActive(branches.find(branch=>branch.classList.contains("is-active"))||null);
 };
 const initializeMarquees=()=>{
   const root=document.querySelector("[data-message-marquees]");
@@ -188,6 +206,7 @@ const initializeContact=()=>{
   window.addEventListener("sugapp:product-contact",event=>{const product=event.detail.product;if(!product)return;contextValue.textContent=product.name;context.hidden=false;message.value=`Quiero conversar sobre una solución de ${product.name}.`;});
   form.addEventListener("submit",async event=>{event.preventDefault();const data=new FormData(form);const text=`Nombre: ${data.get("name")}\nContacto: ${data.get("contact")}\nTipo: ${data.get("type")||"Sin definir"}\nMensaje: ${data.get("message")}`;const status=document.querySelector("[data-form-status]");try{await navigator.clipboard.writeText(text);status.textContent="Consulta copiada. El envío directo se habilitará cuando se confirme el canal público.";}catch{status.textContent="Consulta preparada. El envío directo se habilitará cuando se confirme el canal público.";}})
 };
-initializeIntro();initializeReveal();initializeExplorers();initializeMarquees();initializeFlows();initializeProductNavigation();initializeContact();updateHero();
+initializeIntro();initializeReveal();initializeImprovementSelector();initializeMarquees();initializeFlows();initializeProductNavigation();initializeContact();updateHero();
 document.querySelector("[data-year]").textContent=new Date().getFullYear();
 addEventListener("scroll",updateHero,{passive:true});
+addEventListener("resize",updateHero,{passive:true});

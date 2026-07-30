@@ -48,7 +48,9 @@
         <a class="hero-scroll" href="#necesidades" aria-label="Descubrir cómo podemos ayudarte" tabindex="-1"><span class="scroll-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span><span class="scroll-arrow scroll-arrow-delayed" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="m6 9 6 6 6-6"></path></svg></span></a>
       </div>
     </section>
+    <section>
 
+    </section>
     <section class="narrative" id="necesidades" aria-labelledby="needs-title">
       <header class="needs-opening reveal">
         <h2 id="needs-title">¿En qué podemos ayudarte?</h2>
@@ -56,27 +58,111 @@
 
       <div class="query-marquees reveal" data-message-marquees aria-label="Necesidades que podemos ayudar a resolver"></div>
 
-      <div class="message-close reveal">
-        <p>
-          <span>Si algo de esto se parece a lo que necesitás,</span>
-          <strong>podemos ayudarte a solucionarlo.</strong>
-        </p>
-        <a class="button button-accent" href="#contacto">Consultar <span aria-hidden="true">↘</span></a>
-      </div>
+      <div class="improvement-selector reveal" data-improvement-selector>
+        <header class="improvement-heading">
+          <h2>¿Qué querés mejorar?</h2>
+        </header>
 
-      <div class="concept-sequence reveal" aria-label="De las necesidades a las soluciones">
-        <p class="concept concept-start">Llegá mejor a tus clientes.</p>
-        <span class="concept-guide" aria-hidden="true"><i></i><i></i></span>
-        <p class="concept concept-middle">Tené tu negocio más ordenado.</p>
-        <span class="concept-guide concept-guide-last" aria-hidden="true"><i></i><i></i></span>
-        <p class="concept concept-end">Modernizá tu forma de trabajar.</p>
+        <div class="improvement-accordion">
+          <article class="improvement-branch" data-improvement-branch>
+            <h3>
+              <button type="button" id="improvement-trigger-clients" aria-expanded="false" aria-controls="improvement-panel-clients" data-improvement-trigger>
+                <span>01</span><strong>Conseguir más clientes</strong><i aria-hidden="true"></i>
+              </button>
+            </h3>
+            <div class="improvement-panel" id="improvement-panel-clients" role="region" aria-labelledby="improvement-trigger-clients" aria-hidden="true" data-improvement-panel>
+              <div class="improvement-panel-inner">
+                <ul>
+                  <li>Landing o sitio web</li>
+                  <li>Posicionamiento</li>
+                  <li>Formularios de contacto</li>
+                  <li>Analítica</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="improvement-branch" data-improvement-branch>
+            <h3>
+              <button type="button" id="improvement-trigger-sales" aria-expanded="false" aria-controls="improvement-panel-sales" data-improvement-trigger>
+                <span>02</span><strong>Vender por internet</strong><i aria-hidden="true"></i>
+              </button>
+            </h3>
+            <div class="improvement-panel" id="improvement-panel-sales" role="region" aria-labelledby="improvement-trigger-sales" aria-hidden="true" data-improvement-panel>
+              <div class="improvement-panel-inner">
+                <ul>
+                  <li>Catálogo</li>
+                  <li>Tienda online</li>
+                  <li>Pagos</li>
+                  <li>Envíos</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="improvement-branch" data-improvement-branch>
+            <h3>
+              <button type="button" id="improvement-trigger-order" aria-expanded="false" aria-controls="improvement-panel-order" data-improvement-trigger>
+                <span>03</span><strong>Organizar mi negocio</strong><i aria-hidden="true"></i>
+              </button>
+            </h3>
+            <div class="improvement-panel" id="improvement-panel-order" role="region" aria-labelledby="improvement-trigger-order" aria-hidden="true" data-improvement-panel>
+              <div class="improvement-panel-inner">
+                <ul>
+                  <li>Stock</li>
+                  <li>Clientes</li>
+                  <li>Ventas</li>
+                  <li>Reportes</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="improvement-branch" data-improvement-branch>
+            <h3>
+              <button type="button" id="improvement-trigger-time" aria-expanded="false" aria-controls="improvement-panel-time" data-improvement-trigger>
+                <span>04</span><strong>Ahorrar tiempo</strong><i aria-hidden="true"></i>
+              </button>
+            </h3>
+            <div class="improvement-panel" id="improvement-panel-time" role="region" aria-labelledby="improvement-trigger-time" aria-hidden="true" data-improvement-panel>
+              <div class="improvement-panel-inner">
+                <ul>
+                  <li>Automatizaciones</li>
+                  <li>Formularios</li>
+                  <li>Escaneo de información</li>
+                  <li>IA aplicada</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="improvement-branch" data-improvement-branch>
+            <h3>
+              <button type="button" id="improvement-trigger-service" aria-expanded="false" aria-controls="improvement-panel-service" data-improvement-trigger>
+                <span>05</span><strong>Atender mejor</strong><i aria-hidden="true"></i>
+              </button>
+            </h3>
+            <div class="improvement-panel" id="improvement-panel-service" role="region" aria-labelledby="improvement-trigger-service" aria-hidden="true" data-improvement-panel>
+              <div class="improvement-panel-inner">
+                <ul>
+                  <li>Turnos y reservas</li>
+                  <li>Seguimiento de consultas</li>
+                  <li>WhatsApp</li>
+                  <li>Portales para clientes</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
 
     </section>
 
-    <section class="families" id="familias" aria-labelledby="families-title">
-      <h2 class="sr-only" id="families-title">Familias de soluciones</h2>
-      <div class="family-explorers" data-family-explorers></div>
+    <section class="project-gallery-section" id="familias" aria-labelledby="projects-title">
+      <header class="project-gallery-heading reveal">
+        <h2 id="projects-title">Soluciones que podemos construir</h2>
+      </header>
+      <div class="project-gallery" data-project-gallery></div>
     </section>
 
     <section class="contact" id="contacto" aria-labelledby="contact-title">
@@ -98,6 +184,10 @@
     <header class="product-experience-bar"><button type="button" data-product-close><span aria-hidden="true">←</span> Volver a soluciones</button><span data-product-location></span></header>
     <div class="product-experience-scroll" data-product-content role="document"></div>
   </div>
-  <footer><div class="shell footer-row"><a class="wordmark footer-wordmark" href="#inicio" aria-label="SugApp, volver al inicio">sugapp</a><p>Soluciones digitales pensadas desde necesidades reales.</p><p>© <span data-year></span> SugApp</p></div></footer>
+  <footer>
+    <div class="shell footer-row">
+      <a class="wordmark footer-wordmark" href="#inicio" aria-label="SugApp, volver al inicio">sugapp</a><p>Soluciones digitales pensadas desde necesidades reales.</p><p>© <span data-year></span> SugApp</p>
+    </div>
+  </footer>
 </body>
 </html>
