@@ -67,7 +67,7 @@
           <article class="improvement-branch" data-improvement-branch>
             <h3>
               <button type="button" id="improvement-trigger-clients" aria-expanded="false" aria-controls="improvement-panel-clients" data-improvement-trigger>
-                <span>01</span><strong>Conseguir más clientes</strong><i aria-hidden="true"></i>
+                <span class="improvement-option-signal" aria-hidden="true"></span><strong>Conseguir más clientes</strong><i aria-hidden="true"></i>
               </button>
             </h3>
             <div class="improvement-panel" id="improvement-panel-clients" role="region" aria-labelledby="improvement-trigger-clients" aria-hidden="true" data-improvement-panel>
@@ -85,7 +85,7 @@
           <article class="improvement-branch" data-improvement-branch>
             <h3>
               <button type="button" id="improvement-trigger-sales" aria-expanded="false" aria-controls="improvement-panel-sales" data-improvement-trigger>
-                <span>02</span><strong>Vender por internet</strong><i aria-hidden="true"></i>
+                <span class="improvement-option-signal" aria-hidden="true"></span><strong>Vender por internet</strong><i aria-hidden="true"></i>
               </button>
             </h3>
             <div class="improvement-panel" id="improvement-panel-sales" role="region" aria-labelledby="improvement-trigger-sales" aria-hidden="true" data-improvement-panel>
@@ -103,7 +103,7 @@
           <article class="improvement-branch" data-improvement-branch>
             <h3>
               <button type="button" id="improvement-trigger-order" aria-expanded="false" aria-controls="improvement-panel-order" data-improvement-trigger>
-                <span>03</span><strong>Organizar mi negocio</strong><i aria-hidden="true"></i>
+                <span class="improvement-option-signal" aria-hidden="true"></span><strong>Organizar mi negocio</strong><i aria-hidden="true"></i>
               </button>
             </h3>
             <div class="improvement-panel" id="improvement-panel-order" role="region" aria-labelledby="improvement-trigger-order" aria-hidden="true" data-improvement-panel>
@@ -121,7 +121,7 @@
           <article class="improvement-branch" data-improvement-branch>
             <h3>
               <button type="button" id="improvement-trigger-time" aria-expanded="false" aria-controls="improvement-panel-time" data-improvement-trigger>
-                <span>04</span><strong>Ahorrar tiempo</strong><i aria-hidden="true"></i>
+                <span class="improvement-option-signal" aria-hidden="true"></span><strong>Ahorrar tiempo</strong><i aria-hidden="true"></i>
               </button>
             </h3>
             <div class="improvement-panel" id="improvement-panel-time" role="region" aria-labelledby="improvement-trigger-time" aria-hidden="true" data-improvement-panel>
@@ -139,7 +139,7 @@
           <article class="improvement-branch" data-improvement-branch>
             <h3>
               <button type="button" id="improvement-trigger-service" aria-expanded="false" aria-controls="improvement-panel-service" data-improvement-trigger>
-                <span>05</span><strong>Atender mejor</strong><i aria-hidden="true"></i>
+                <span class="improvement-option-signal" aria-hidden="true"></span><strong>Atender mejor</strong><i aria-hidden="true"></i>
               </button>
             </h3>
             <div class="improvement-panel" id="improvement-panel-service" role="region" aria-labelledby="improvement-trigger-service" aria-hidden="true" data-improvement-panel>
@@ -153,6 +153,18 @@
               </div>
             </div>
           </article>
+
+          <div class="improvement-empty-state" data-improvement-empty>
+            <svg class="improvement-choice-tree" viewBox="0 0 560 300" preserveAspectRatio="none" aria-hidden="true">
+              <path class="choice-tree-branch" d="M0 30 H110"></path>
+              <path class="choice-tree-branch" d="M0 90 H110"></path>
+              <path class="choice-tree-branch" d="M0 150 H110"></path>
+              <path class="choice-tree-branch" d="M0 210 H110"></path>
+              <path class="choice-tree-branch" d="M0 270 H110"></path>
+              <path class="choice-tree-branch" d="M110 30 V270 M110 150 H160"></path>
+            </svg>
+            <p><small>Cada punto abre un camino</small><strong>Elegí por dónde empezar.</strong></p>
+          </div>
         </div>
       </div>
 

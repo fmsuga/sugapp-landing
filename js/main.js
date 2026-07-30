@@ -40,7 +40,24 @@ const updateHero=()=>{
 const initializeReveal=()=>{
   const elements=[...document.querySelectorAll(".reveal")];
   if(reducedMotion||!("IntersectionObserver" in window)){elements.forEach(el=>el.classList.add("is-visible"));return;}
-  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("is-visible");observer.unobserve(entry.target);}}),{threshold:.12,rootMargin:"0px 0px -7%"});
+  const observer=new IntersectionObserver(entries=>{
+    const visibleEntries=entries.filter(entry=>entry.isIntersecting);
+    const projectEntries=visibleEntries
+      .filter(entry=>entry.target.classList.contains("project-piece"))
+      .sort((a,b)=>elements.indexOf(a.target)-elements.indexOf(b.target));
+
+    visibleEntries
+      .filter(entry=>!entry.target.classList.contains("project-piece"))
+      .forEach(entry=>{
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+
+    projectEntries.forEach((entry,index)=>{
+      observer.unobserve(entry.target);
+      window.setTimeout(()=>entry.target.classList.add("is-visible"),index*320);
+    });
+  },{threshold:.12,rootMargin:"0px 0px -7%"});
   elements.forEach(el=>observer.observe(el));
 };
 const initializeImprovementSelector=()=>{
@@ -48,15 +65,19 @@ const initializeImprovementSelector=()=>{
   if(!root)return;
   const branches=[...root.querySelectorAll("[data-improvement-branch]")];
   const triggers=branches.map(branch=>branch.querySelector("[data-improvement-trigger]"));
-  const setActive=activeBranch=>branches.forEach(branch=>{
-    const active=branch===activeBranch;
-    const trigger=branch.querySelector("[data-improvement-trigger]");
-    const panel=branch.querySelector("[data-improvement-panel]");
-    branch.classList.toggle("is-active",active);
-    trigger.setAttribute("aria-expanded",String(active));
-    panel.setAttribute("aria-hidden",String(!active));
-    panel.inert=!active;
-  });
+  const accordion=root.querySelector(".improvement-accordion");
+  const setActive=activeBranch=>{
+    branches.forEach(branch=>{
+      const active=branch===activeBranch;
+      const trigger=branch.querySelector("[data-improvement-trigger]");
+      const panel=branch.querySelector("[data-improvement-panel]");
+      branch.classList.toggle("is-active",active);
+      trigger.setAttribute("aria-expanded",String(active));
+      panel.setAttribute("aria-hidden",String(!active));
+      panel.inert=!active;
+    });
+    accordion.classList.toggle("has-selection",Boolean(activeBranch));
+  };
   triggers.forEach((trigger,index)=>{
     trigger.addEventListener("click",()=>{
       const branch=branches[index];
