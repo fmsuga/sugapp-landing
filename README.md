@@ -4,5 +4,5 @@ The public landing page for SugApp, showcasing its digital solutions for busines
 
 ## Live Demo
 
-[Visit the website](https://fmsuga.github.io/sugapp-landing/)
+👉 [Visit the website](https://fmsuga.github.io/sugapp-landing/)
 
