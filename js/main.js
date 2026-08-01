@@ -6,6 +6,7 @@ import { publicNeeds, operationalNeeds } from "./client-messages.js";
 const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hero=document.querySelector(".hero");
 const heroScroll=document.querySelector(".hero-scroll");
+const needsScene=document.querySelector(".narrative");
 const galleryRoot=document.querySelector("[data-project-gallery]");
 renderProjectGallery(products,galleryRoot);
 
@@ -24,18 +25,27 @@ const updateHero=()=>{
   hero.style.setProperty("--hero-margin-top",`${(24*(1-expansionProgress)).toFixed(2)}px`);
   hero.style.setProperty("--hero-radius",`${(20*(1-expansionProgress)).toFixed(2)}px`);
   hero.style.setProperty("--hero-height-offset",`${(48*(1-expansionProgress)).toFixed(2)}px`);
-  const contentTravel=Math.min(window.innerWidth*.085,128);
-  hero.style.setProperty("--hero-content-shift",`${(expansionProgress*contentTravel).toFixed(2)}px`);
-  const textFadeProgress=Math.min(1,Math.max(0,(rawProgress-.06)/.24));
-  const textFadeEase=textFadeProgress*textFadeProgress*(3-2*textFadeProgress);
-  const textVisibility=1-textFadeEase;
-  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-.48)/.24));
+  const smooth=value=>value*value*(3-2*value);
+  const imageFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.08)/.72)));
+  const copyFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.04)/.28)));
+  const titleFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.14)/.56)));
+  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-.02)/.24));
   const actionsFadeEase=actionsFadeProgress*actionsFadeProgress*(3-2*actionsFadeProgress);
   const actionsVisibility=1-actionsFadeEase;
-  const actionsFollow=Math.min(-rect.top,hero.offsetHeight*.1);
-  hero.style.setProperty("--hero-text-visibility",textVisibility.toFixed(3));
+  const titleTravel=window.innerWidth<=560?12:20;
+  hero.style.setProperty("--hero-image-visibility",(1-imageFadeProgress*.68).toFixed(3));
+  hero.style.setProperty("--hero-title-visibility",(1-titleFadeProgress*.88).toFixed(3));
+  hero.style.setProperty("--hero-title-shift-y",`${(-titleFadeProgress*titleTravel).toFixed(2)}px`);
+  hero.style.setProperty("--hero-copy-visibility",(1-copyFadeProgress).toFixed(3));
   hero.style.setProperty("--hero-actions-visibility",actionsVisibility.toFixed(3));
-  hero.style.setProperty("--hero-actions-follow",`${actionsFollow.toFixed(2)}px`);
+  hero.style.setProperty("--hero-actions-follow",`${(-actionsFadeEase*10).toFixed(2)}px`);
+  if(needsScene&&!reducedMotion){
+    const transitionProgress=rawProgress;
+    const segment=(start,end)=>smooth(Math.min(1,Math.max(0,(transitionProgress-start)/(end-start))));
+    needsScene.style.setProperty("--needs-question-progress",segment(.46,.54).toFixed(3));
+    needsScene.style.setProperty("--needs-row-one-progress",segment(.66,.76).toFixed(3));
+    needsScene.style.setProperty("--needs-row-two-progress",segment(.72,.82).toFixed(3));
+  }
 };
 const initializeReveal=()=>{
   const elements=[...document.querySelectorAll(".reveal")];
@@ -196,6 +206,7 @@ const initializeMarquees=()=>{
     const delta=Math.min(.018,(time-previousTime)/1000);
     previousTime=time;
     scrollVelocity*=Math.pow(.02,delta);
+    updateHero();
     rows.forEach(state=>{
       if(!state.visible||document.hidden||reducedMotion)return;
       const normalizedScrollVelocity=Math.min(Math.abs(scrollVelocity)/900,1);
@@ -229,5 +240,4 @@ const initializeContact=()=>{
 };
 initializeIntro();initializeReveal();initializeImprovementSelector();initializeMarquees();initializeFlows();initializeProductNavigation();initializeContact();updateHero();
 document.querySelector("[data-year]").textContent=new Date().getFullYear();
-addEventListener("scroll",updateHero,{passive:true});
 addEventListener("resize",updateHero,{passive:true});
