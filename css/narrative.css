@@ -158,6 +158,67 @@ body.product-open { overflow:hidden; }
   .query-marquees{width:calc(100% - 34px);margin:27px auto 25px;gap:10px}.marquee-viewport{padding-inline:5px;-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}.marquee-set{gap:7px}.client-message,.client-message--secondary{max-width:82vw;min-height:43px;padding:9px 15px;font-size:.81rem}
   .flow-switcher{max-width:100%}.ecosystem{padding-inline:18px}
 }
+
+/* Ritmo y composición propios para el inicio de la narrativa en mobile. */
+@media(max-width:768px){
+  .narrative{
+    min-height:0;
+    margin-top:0;
+    padding:clamp(58px,9svh,78px) 0 clamp(52px,8svh,72px);
+    overflow:hidden;
+    justify-content:flex-start;
+  }
+  .narrative:after{top:2%;width:92vw;height:32%;filter:blur(34px)}
+  .needs-opening{width:calc(100% - 32px)}
+  .needs-opening h2{max-width:600px;font-size:clamp(2.2rem,8.5vw,3.65rem);line-height:1.02;text-wrap:balance}
+  .js .narrative .needs-opening{transform:translate3d(0,calc((1 - var(--needs-question-progress)) * 10px),0)}
+  .query-marquees{width:calc(100% - 20px);margin:clamp(28px,6svh,42px) auto clamp(34px,6svh,48px);gap:10px}
+  .marquee-row{max-width:100%;overflow:hidden;touch-action:pan-y;overscroll-behavior-inline:contain}
+  .marquee-row-top{transform:translate3d(calc((1 - var(--needs-row-one-progress)) * 12px),0,0)}
+  .marquee-row-bottom{transform:translate3d(calc((1 - var(--needs-row-two-progress)) * -12px),0,0)}
+  .marquee-viewport{box-sizing:border-box;padding:4px 0;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(to right,transparent 0%,#000 9%,#000 91%,transparent 100%)}
+  .marquee-set{padding-inline:4px;gap:6px}
+  .client-message-wrapper{padding:2px 4px}
+  .client-message,.client-message--secondary{max-width:min(74vw,280px);min-height:40px;padding:8px 13px;border-radius:14px;font-size:clamp(.76rem,2.25vw,.86rem);line-height:1.28}
+  .client-message p{max-width:29ch}
+  .improvement-selector{width:calc(100% - 28px);margin:clamp(26px,5svh,42px) auto 0}
+  .improvement-heading{margin-bottom:16px}
+  .js .improvement-selector.is-visible .improvement-branch h3{animation-duration:.42s;animation-delay:.12s}
+  .js .improvement-selector.is-visible .improvement-branch:nth-child(2) h3{animation-delay:.18s}
+  .js .improvement-selector.is-visible .improvement-branch:nth-child(3) h3{animation-delay:.24s}
+  .js .improvement-selector.is-visible .improvement-branch:nth-child(4) h3{animation-delay:.3s}
+  .js .improvement-selector.is-visible .improvement-branch:nth-child(5) h3{animation-delay:.36s}
+}
+
+@media(max-width:520px){
+  .narrative{padding-top:58px}
+  .needs-opening{width:calc(100% - 28px)}
+  .needs-opening h2{font-size:clamp(2.15rem,11vw,2.85rem)}
+  .query-marquees{width:calc(100% - 12px);margin-top:30px;margin-bottom:38px}
+  .client-message,.client-message--secondary{max-width:min(72vw,252px)}
+  .improvement-selector{width:calc(100% - 24px);margin-top:30px}
+  .improvement-heading h2{font-size:clamp(1.5rem,7vw,1.85rem)}
+  .improvement-accordion{display:block;min-height:0;overflow:hidden;perspective:none}
+  .improvement-accordion:before,.improvement-empty-state{display:none}
+  .improvement-branch{display:block}
+  .improvement-branch h3{grid-column:auto}
+  .improvement-branch h3 button{min-height:54px;padding-inline:12px;grid-template-columns:20px minmax(0,1fr) 18px;gap:8px}
+  .improvement-branch h3 button>strong{font-size:.88rem}
+  .improvement-panel{position:relative;display:block;grid-column:auto;grid-row:auto;max-height:0;visibility:hidden;opacity:0;clip-path:none;transform:none;overflow:hidden;transition:max-height .3s ease,opacity .22s ease,visibility 0s .3s}
+  .improvement-branch.is-active .improvement-panel{max-height:250px;visibility:visible;opacity:1;transform:none;transition:max-height .32s ease,opacity .22s ease .06s,visibility 0s}
+  .improvement-panel-inner{height:auto;min-height:0;padding:14px 16px 18px;align-items:stretch}
+  .improvement-panel-inner:before{display:none}
+  .improvement-panel ul{grid-template-columns:1fr 1fr}
+  .improvement-panel li{min-height:44px;padding:13px 8px 10px 12px;font-size:.68rem}
+  .improvement-panel li:before{top:50%;left:1px}
+}
+
+@media(max-width:768px) and (max-height:520px) and (orientation:landscape){
+  .narrative{padding-top:48px;padding-bottom:52px}
+  .query-marquees{margin-top:26px;margin-bottom:32px}
+  .needs-opening h2{font-size:clamp(2.15rem,7vw,3rem)}
+}
+
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}.narrative{margin-top:0}.reveal,.js .narrative .needs-opening,.marquee-row,.project-piece{opacity:1;clip-path:none;filter:none;transform:none;transition:none}.marquee-viewport{overflow-x:auto;scrollbar-width:thin}.marquee-track{transform:none!important}.marquee-set[aria-hidden="true"]{display:none}.client-message,.project-piece,.project-piece-visual .product-visual,.improvement-branch,.improvement-branch h3 button,.improvement-panel,.improvement-panel-inner,.improvement-empty-state{transition:none}.improvement-option-signal:after{animation:none!important}
   .js .improvement-branch h3,.js .improvement-selector.is-visible .improvement-branch h3{opacity:1;filter:none;transform:none;animation:none}

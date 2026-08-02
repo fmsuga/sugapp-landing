@@ -17,6 +17,7 @@ const initializeIntro=()=>{
 };
 const updateHero=()=>{
   const rect=hero.getBoundingClientRect();
+  const mobileViewport=window.innerWidth<=768;
   heroScroll.classList.toggle("is-past-hero",rect.bottom<=8);
   const rawProgress=reducedMotion?0:Math.min(1,Math.max(0,-rect.top)/hero.offsetHeight);
   const expansionProgress=Math.min(1,rawProgress/.45);
@@ -26,13 +27,13 @@ const updateHero=()=>{
   hero.style.setProperty("--hero-radius",`${(20*(1-expansionProgress)).toFixed(2)}px`);
   hero.style.setProperty("--hero-height-offset",`${(48*(1-expansionProgress)).toFixed(2)}px`);
   const smooth=value=>value*value*(3-2*value);
-  const imageFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.08)/.72)));
-  const copyFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.04)/.28)));
-  const titleFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.14)/.56)));
-  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-.02)/.24));
+  const imageFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.08)/(mobileViewport ? .82 : .72))));
+  const copyFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .16 : .04))/(mobileViewport ? .38 : .28))));
+  const titleFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .24 : .14))/(mobileViewport ? .54 : .56))));
+  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .12 : .02))/(mobileViewport ? .4 : .24)));
   const actionsFadeEase=actionsFadeProgress*actionsFadeProgress*(3-2*actionsFadeProgress);
   const actionsVisibility=1-actionsFadeEase;
-  const titleTravel=window.innerWidth<=560?12:20;
+  const titleTravel=mobileViewport?8:20;
   hero.style.setProperty("--hero-image-visibility",(1-imageFadeProgress*.68).toFixed(3));
   hero.style.setProperty("--hero-title-visibility",(1-titleFadeProgress*.88).toFixed(3));
   hero.style.setProperty("--hero-title-shift-y",`${(-titleFadeProgress*titleTravel).toFixed(2)}px`);
@@ -133,6 +134,7 @@ const initializeMarquees=()=>{
     lastPointerX:0,
     lastPointerTime:0,
     dragVelocity:0,
+    pauseUntil:0,
     visible:true,
     scrollSpring:spring(1,300,42),
     directionSpring:spring(1,220,34)
@@ -171,6 +173,7 @@ const initializeMarquees=()=>{
       if(!state.dragging||event.pointerId!==state.pointerId)return;
       state.dragging=false;
       state.pointerId=null;
+      if(event.pointerType==="touch")state.pauseUntil=performance.now()+1400;
       row.classList.remove("is-dragging");
       if(row.hasPointerCapture(event.pointerId))row.releasePointerCapture(event.pointerId);
     };
@@ -190,11 +193,11 @@ const initializeMarquees=()=>{
   rows.forEach(state=>visibilityObserver.observe(state.element));
 
   let scrollVelocity=0,lastScrollY=scrollY,lastScrollTime=performance.now();
-  let viewportVelocityScale=innerWidth<=560 ? .62 : innerWidth<=900 ? .86 : 1;
-  let maxScrollBoost=innerWidth<=560 ? 16 : innerWidth<=900 ? 22 : 30;
+  let viewportVelocityScale=innerWidth<=560 ? .46 : innerWidth<=768 ? .62 : innerWidth<=900 ? .86 : 1;
+  let maxScrollBoost=innerWidth<=560 ? 12 : innerWidth<=768 ? 16 : innerWidth<=900 ? 22 : 30;
   addEventListener("resize",()=>{
-    viewportVelocityScale=innerWidth<=560 ? .62 : innerWidth<=900 ? .86 : 1;
-    maxScrollBoost=innerWidth<=560 ? 16 : innerWidth<=900 ? 22 : 30;
+    viewportVelocityScale=innerWidth<=560 ? .46 : innerWidth<=768 ? .62 : innerWidth<=900 ? .86 : 1;
+    maxScrollBoost=innerWidth<=560 ? 12 : innerWidth<=768 ? 16 : innerWidth<=900 ? 22 : 30;
   },{passive:true});
   addEventListener("scroll",()=>{
     const now=performance.now(),elapsed=Math.max(16,now-lastScrollTime);
@@ -220,7 +223,7 @@ const initializeMarquees=()=>{
         state.offset+=state.dragVelocity*delta;
         state.dragVelocity*=Math.pow(.045,delta);
       }
-      const pauseFactor=state.dragging?0:1;
+      const pauseFactor=state.dragging||time<state.pauseUntil?0:1;
       const pixelsPerSecond=state.baseVelocity*7*viewportVelocityScale;
       state.offset+=state.direction*scrollDirectionFactor*pixelsPerSecond*scrollFactor*pauseFactor*delta;
       if(state.offset<=-state.setWidth)state.offset+=state.setWidth;
