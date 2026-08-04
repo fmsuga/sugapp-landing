@@ -1,246 +1,38 @@
-import { products } from "./product-data.js";
-import { renderProjectGallery } from "./product-catalog.js";
-import { initializeProductNavigation } from "./product-navigation.js";
-import { publicNeeds, operationalNeeds } from "./client-messages.js";
+import {publicNeeds,operationalNeeds} from './client-messages.js';
+import {solutions,industries,advisorSteps,getRecommendation} from './site-data.js';
+import {CONTACT} from './config.js';
 
-const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const hero=document.querySelector(".hero");
-const heroScroll=document.querySelector(".hero-scroll");
-const needsScene=document.querySelector(".narrative");
-const galleryRoot=document.querySelector("[data-project-gallery]");
-renderProjectGallery(products,galleryRoot);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+const focusable=root=>[...root.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')];
 
-const initializeIntro=()=>{
-  window.setTimeout(()=>{heroScroll.classList.add("is-ready");heroScroll.removeAttribute("tabindex");},reducedMotion?0:5000);
-  if(reducedMotion) document.documentElement.classList.add("hero-ready");
-  else window.setTimeout(()=>document.documentElement.classList.add("hero-ready"),520);
-};
-const updateHero=()=>{
-  const rect=hero.getBoundingClientRect();
-  const mobileViewport=window.innerWidth<=768;
-  heroScroll.classList.toggle("is-past-hero",rect.bottom<=8);
-  const rawProgress=reducedMotion?0:Math.min(1,Math.max(0,-rect.top)/hero.offsetHeight);
-  const expansionProgress=Math.min(1,rawProgress/.45);
-  hero.style.setProperty("--hero-scroll-darkness",(expansionProgress*.72).toFixed(3));
-  hero.style.setProperty("--hero-inset-x",`${(36*(1-expansionProgress)).toFixed(2)}px`);
-  hero.style.setProperty("--hero-margin-top",`${(24*(1-expansionProgress)).toFixed(2)}px`);
-  hero.style.setProperty("--hero-radius",`${(20*(1-expansionProgress)).toFixed(2)}px`);
-  hero.style.setProperty("--hero-height-offset",`${(48*(1-expansionProgress)).toFixed(2)}px`);
-  const smooth=value=>value*value*(3-2*value);
-  const imageFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-.08)/(mobileViewport ? .82 : .72))));
-  const copyFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .16 : .04))/(mobileViewport ? .38 : .28))));
-  const titleFadeProgress=smooth(Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .24 : .14))/(mobileViewport ? .54 : .56))));
-  const actionsFadeProgress=Math.min(1,Math.max(0,(rawProgress-(mobileViewport ? .12 : .02))/(mobileViewport ? .4 : .24)));
-  const actionsFadeEase=actionsFadeProgress*actionsFadeProgress*(3-2*actionsFadeProgress);
-  const actionsVisibility=1-actionsFadeEase;
-  const titleTravel=mobileViewport?8:20;
-  hero.style.setProperty("--hero-image-visibility",(1-imageFadeProgress*.68).toFixed(3));
-  hero.style.setProperty("--hero-title-visibility",(1-titleFadeProgress*.88).toFixed(3));
-  hero.style.setProperty("--hero-title-shift-y",`${(-titleFadeProgress*titleTravel).toFixed(2)}px`);
-  hero.style.setProperty("--hero-copy-visibility",(1-copyFadeProgress).toFixed(3));
-  hero.style.setProperty("--hero-actions-visibility",actionsVisibility.toFixed(3));
-  hero.style.setProperty("--hero-actions-follow",`${(-actionsFadeEase*10).toFixed(2)}px`);
-  if(needsScene&&!reducedMotion){
-    const transitionProgress=rawProgress;
-    const segment=(start,end)=>smooth(Math.min(1,Math.max(0,(transitionProgress-start)/(end-start))));
-    needsScene.style.setProperty("--needs-question-progress",segment(.46,.54).toFixed(3));
-    needsScene.style.setProperty("--needs-row-one-progress",segment(.66,.76).toFixed(3));
-    needsScene.style.setProperty("--needs-row-two-progress",segment(.72,.82).toFixed(3));
-  }
-};
-const initializeReveal=()=>{
-  const elements=[...document.querySelectorAll(".reveal")];
-  if(reducedMotion||!("IntersectionObserver" in window)){elements.forEach(el=>el.classList.add("is-visible"));return;}
-  const observer=new IntersectionObserver(entries=>{
-    const visibleEntries=entries.filter(entry=>entry.isIntersecting);
-    const projectEntries=visibleEntries
-      .filter(entry=>entry.target.classList.contains("project-piece"))
-      .sort((a,b)=>elements.indexOf(a.target)-elements.indexOf(b.target));
+function initIntro(){const intro=document.querySelector('[data-intro]');const reveal=()=>document.documentElement.classList.add('hero-ready');if(!intro||reduced||sessionStorage.getItem('sugapp-intro')){intro?.remove();reveal();return}sessionStorage.setItem('sugapp-intro','seen');setTimeout(()=>{intro.classList.add('is-done');reveal()},900);setTimeout(()=>intro.remove(),1500)}
 
-    visibleEntries
-      .filter(entry=>!entry.target.classList.contains("project-piece"))
-      .forEach(entry=>{
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
+function initHeroCta(){const cta=document.querySelector('.hero-action');if(!cta)return;if(reduced){cta.classList.add('is-ready');return}const reveal=()=>setTimeout(()=>{cta.classList.add('is-entering');cta.addEventListener('animationend',()=>{cta.classList.remove('is-entering');cta.classList.add('is-ready')},{once:true})},600);if(!('IntersectionObserver'in window)){reveal();return}const observer=new IntersectionObserver(entries=>{if(!entries.some(entry=>entry.isIntersecting))return;observer.disconnect();reveal()},{threshold:.1});observer.observe(cta)}
 
-    projectEntries.forEach((entry,index)=>{
-      observer.unobserve(entry.target);
-      window.setTimeout(()=>entry.target.classList.add("is-visible"),index*320);
-    });
-  },{threshold:.12,rootMargin:"0px 0px -7%"});
-  elements.forEach(el=>observer.observe(el));
-};
-const initializeImprovementSelector=()=>{
-  const root=document.querySelector("[data-improvement-selector]");
-  if(!root)return;
-  const branches=[...root.querySelectorAll("[data-improvement-branch]")];
-  const triggers=branches.map(branch=>branch.querySelector("[data-improvement-trigger]"));
-  const accordion=root.querySelector(".improvement-accordion");
-  const setActive=activeBranch=>{
-    branches.forEach(branch=>{
-      const active=branch===activeBranch;
-      const trigger=branch.querySelector("[data-improvement-trigger]");
-      const panel=branch.querySelector("[data-improvement-panel]");
-      branch.classList.toggle("is-active",active);
-      trigger.setAttribute("aria-expanded",String(active));
-      panel.setAttribute("aria-hidden",String(!active));
-      panel.inert=!active;
-    });
-    accordion.classList.toggle("has-selection",Boolean(activeBranch));
-  };
-  triggers.forEach((trigger,index)=>{
-    trigger.addEventListener("click",()=>{
-      const branch=branches[index];
-      setActive(branch.classList.contains("is-active")?null:branch);
-    });
-    trigger.addEventListener("keydown",event=>{
-      const destinations={ArrowDown:(index+1)%triggers.length,ArrowUp:(index-1+triggers.length)%triggers.length,Home:0,End:triggers.length-1};
-      if(!(event.key in destinations))return;
-      event.preventDefault();
-      triggers[destinations[event.key]].focus();
-    });
-  });
-  setActive(branches.find(branch=>branch.classList.contains("is-active"))||null);
-};
-const initializeMarquees=()=>{
-  const root=document.querySelector("[data-message-marquees]");
-  if(!root)return;
-  document.querySelectorAll(".marquee-toggle,[data-marquee-toggle]").forEach(control=>control.remove());
-  const escape=value=>String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
-  const messageMarkup=message=>`<li class="client-message-wrapper"><article class="client-message client-message--${message.tone} client-message--tail-${message.tail} client-message--${message.emphasis==="primary"?"primary":"secondary"}"><p>${escape(message.text)}</p></article></li>`;
-  const rowMarkup=(messages,direction,baseVelocity)=>`<div class="marquee-row marquee-row-${direction==="left"?"top":"bottom"}" data-marquee data-direction="${direction}" data-base-velocity="${baseVelocity}">
-    <div class="marquee-viewport"><div class="marquee-track">${Array.from({length:3},(_,index)=>`<ul class="marquee-set" ${index>0?'aria-hidden="true"':""}>${messages.map(messageMarkup).join("")}</ul>`).join("")}</div></div>
-  </div>`;
-  root.innerHTML=rowMarkup(publicNeeds,"left",2.1)+rowMarkup(operationalNeeds,"right",2.45);
+function initHeader(){const header=document.querySelector('[data-header]'),nav=document.querySelector('[data-nav]'),toggle=document.querySelector('[data-menu-toggle]'),menus=[...document.querySelectorAll('[data-mega-menu]')],buttons=[...document.querySelectorAll('[data-menu-button]')];
+ const closeMenus=()=>{menus.forEach(m=>m.hidden=true);buttons.forEach(b=>b.setAttribute('aria-expanded','false'))};
+ buttons.forEach(button=>button.addEventListener('click',event=>{event.stopPropagation();const menu=document.getElementById(button.dataset.menuButton),open=menu.hidden;closeMenus();menu.hidden=!open;button.setAttribute('aria-expanded',String(open));if(open)requestAnimationFrame(()=>focusable(menu)[0]?.focus())}));
+ toggle.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.sr-only').textContent=open?'Cerrar menú':'Abrir menú';if(open)focusable(nav)[0]?.focus()});
+ nav.addEventListener('click',event=>{if(event.target.matches('a[href^="#"]')){nav.classList.remove('is-open');toggle.setAttribute('aria-expanded','false');closeMenus()}});
+ addEventListener('click',event=>{if(!event.target.closest('.nav-group'))closeMenus()});addEventListener('scroll',()=>header.classList.toggle('is-scrolled',scrollY>24),{passive:true});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'){const opener=buttons.find(b=>b.getAttribute('aria-expanded')==='true');closeMenus();nav.classList.remove('is-open');toggle.setAttribute('aria-expanded','false');opener?.focus()}})}
 
-  const spring=(value,stiffness,damping)=>({value,target:value,velocity:0,stiffness,damping});
-  const updateSpring=(state,delta)=>{
-    const acceleration=state.stiffness*(state.target-state.value)-state.damping*state.velocity;
-    state.velocity+=acceleration*delta;
-    state.value+=state.velocity*delta;
-    return state.value;
-  };
-  const rows=[...root.querySelectorAll("[data-marquee]")].map(row=>({
-    element:row,
-    track:row.querySelector(".marquee-track"),
-    set:row.querySelector(".marquee-set"),
-    direction:row.dataset.direction==="left"?-1:1,
-    baseVelocity:Number(row.dataset.baseVelocity),
-    offset:0,
-    setWidth:1,
-    dragging:false,
-    pointerId:null,
-    lastPointerX:0,
-    lastPointerTime:0,
-    dragVelocity:0,
-    pauseUntil:0,
-    visible:true,
-    scrollSpring:spring(1,300,42),
-    directionSpring:spring(1,220,34)
-  }));
-  rows.forEach(state=>{
-    const row=state.element;
-    state.setWidth=state.set.getBoundingClientRect().width;
-    state.offset=state.direction>0?-state.setWidth:0;
-    const renderDraggedPosition=()=>{
-      if(state.offset<=-state.setWidth)state.offset+=state.setWidth;
-      if(state.offset>=0)state.offset-=state.setWidth;
-      state.track.style.transform=`translate3d(${state.offset}px,0,0)`;
-    };
-    row.addEventListener("pointerdown",event=>{
-      if(event.button!==undefined&&event.button!==0)return;
-      state.dragging=true;
-      state.pointerId=event.pointerId;
-      state.lastPointerX=event.clientX;
-      state.lastPointerTime=performance.now();
-      state.dragVelocity=0;
-      row.classList.add("is-dragging");
-      row.setPointerCapture(event.pointerId);
-    });
-    row.addEventListener("pointermove",event=>{
-      if(!state.dragging||event.pointerId!==state.pointerId)return;
-      const now=performance.now();
-      const elapsed=Math.max(8,now-state.lastPointerTime);
-      const distance=event.clientX-state.lastPointerX;
-      state.offset+=distance;
-      state.dragVelocity=distance/elapsed*1000;
-      state.lastPointerX=event.clientX;
-      state.lastPointerTime=now;
-      renderDraggedPosition();
-    });
-    const finishDrag=event=>{
-      if(!state.dragging||event.pointerId!==state.pointerId)return;
-      state.dragging=false;
-      state.pointerId=null;
-      if(event.pointerType==="touch")state.pauseUntil=performance.now()+1400;
-      row.classList.remove("is-dragging");
-      if(row.hasPointerCapture(event.pointerId))row.releasePointerCapture(event.pointerId);
-    };
-    row.addEventListener("pointerup",finishDrag);
-    row.addEventListener("pointercancel",finishDrag);
-  });
-  const resizeObserver=new ResizeObserver(()=>rows.forEach(state=>{
-    const previousWidth=state.setWidth;
-    state.setWidth=state.set.getBoundingClientRect().width||1;
-    if(previousWidth>1)state.offset*=state.setWidth/previousWidth;
-  }));
-  rows.forEach(state=>resizeObserver.observe(state.set));
-  const visibilityObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
-    const state=rows.find(item=>item.element===entry.target);
-    if(state)state.visible=entry.isIntersecting;
-  }),{rootMargin:"120px"});
-  rows.forEach(state=>visibilityObserver.observe(state.element));
+function initMarquees(){const root=document.querySelector('[data-message-marquees]');if(!root)return;const markup=m=>`<li><article class="client-message ${m.tone==='green'?'green':''}">${escape(m.text)}</article></li>`;const row=(items,direction,speed)=>`<div class="marquee-row" data-marquee data-direction="${direction}" data-base-speed="${speed}" data-scroll-direction="down" tabindex="0" aria-label="Mensajes desplazables"><div class="marquee-viewport"><div class="marquee-track">${[0,1,2].map(i=>`<ul class="marquee-set" ${i?'aria-hidden="true"':''}>${items.map(markup).join('')}</ul>`).join('')}</div></div></div>`;root.innerHTML=row(publicNeeds,-1,60)+row(operationalNeeds,1,66);if(reduced)return;
+ const spring=(value,stiffness,damping)=>({value,target:value,velocity:0,stiffness,damping});const update=(state,dt)=>{const acceleration=state.stiffness*(state.target-state.value)-state.damping*state.velocity;state.velocity+=acceleration*dt;state.value+=state.velocity*dt;return state.value};const rows=[...root.querySelectorAll('[data-marquee]')].map((element,index)=>({element,track:element.querySelector('.marquee-track'),set:element.querySelector('.marquee-set'),direction:Number(element.dataset.direction),base:Number(element.dataset.baseSpeed),offset:0,dragging:false,lastX:0,dragVelocity:0,paused:false,boost:spring(1,260,38),reverse:spring(1,210,32),visible:true,index}));
+ rows.forEach(state=>{state.offset=state.index?-state.set.scrollWidth*.66:-state.set.scrollWidth*.2;const render=()=>{state.track.style.transform=`translateX(${Math.round(state.offset)}px)`};const el=state.element;el.addEventListener('pointerdown',e=>{state.dragging=true;state.lastX=e.clientX;state.dragVelocity=0;el.setPointerCapture(e.pointerId);el.classList.add('is-dragging')});el.addEventListener('pointermove',e=>{if(!state.dragging)return;const dx=e.clientX-state.lastX;state.offset+=dx;state.dragVelocity=dx*34;state.lastX=e.clientX;render()});const stop=()=>{state.dragging=false;el.classList.remove('is-dragging')};el.addEventListener('pointerup',stop);el.addEventListener('pointercancel',stop);el.addEventListener('mouseenter',()=>state.paused=true);el.addEventListener('mouseleave',()=>state.paused=false);el.addEventListener('focus',()=>state.paused=true);el.addEventListener('blur',()=>state.paused=false);el.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight'].includes(event.key))return;event.preventDefault();state.offset+=event.key==='ArrowLeft'?48:-48;const width=state.set.scrollWidth||1;if(state.offset<=-width)state.offset+=width;if(state.offset>=0)state.offset-=width;render()})});
+ let scrollVelocity=0,lastY=scrollY,lastScroll=performance.now(),lastFrame=performance.now();addEventListener('scroll',()=>{const now=performance.now(),elapsed=Math.max(16,now-lastScroll);scrollVelocity=(scrollY-lastY)/elapsed*1000;lastY=scrollY;lastScroll=now},{passive:true});const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{const state=rows.find(rowState=>rowState.element===entry.target);if(state)state.visible=entry.isIntersecting}),{rootMargin:'100px'});rows.forEach(state=>observer.observe(state.element));const animate=time=>{const dt=Math.min(.02,(time-lastFrame)/1000);lastFrame=time;scrollVelocity*=Math.pow(.055,dt);const scrollDirection=scrollVelocity<-35?-1:1,boost=1+Math.min(Math.abs(scrollVelocity)/900,1)*5;rows.forEach(state=>{state.element.dataset.scrollDirection=scrollDirection<0?'up':'down';state.boost.target=boost;state.reverse.target=scrollDirection;if(!state.visible||state.paused||state.dragging)return;state.offset+=state.dragVelocity*dt;state.dragVelocity*=Math.pow(.065,dt);state.offset+=state.direction*update(state.reverse,dt)*state.base*update(state.boost,dt)*dt;const width=state.set.scrollWidth||1;if(state.offset<=-width)state.offset+=width;if(state.offset>=0)state.offset-=width;state.track.style.transform=`translateX(${Math.round(state.offset)}px)`});requestAnimationFrame(animate)};requestAnimationFrame(animate)}
 
-  let scrollVelocity=0,lastScrollY=scrollY,lastScrollTime=performance.now();
-  let viewportVelocityScale=innerWidth<=560 ? .46 : innerWidth<=768 ? .62 : innerWidth<=900 ? .86 : 1;
-  let maxScrollBoost=innerWidth<=560 ? 12 : innerWidth<=768 ? 16 : innerWidth<=900 ? 22 : 30;
-  addEventListener("resize",()=>{
-    viewportVelocityScale=innerWidth<=560 ? .46 : innerWidth<=768 ? .62 : innerWidth<=900 ? .86 : 1;
-    maxScrollBoost=innerWidth<=560 ? 12 : innerWidth<=768 ? 16 : innerWidth<=900 ? 22 : 30;
-  },{passive:true});
-  addEventListener("scroll",()=>{
-    const now=performance.now(),elapsed=Math.max(16,now-lastScrollTime);
-    scrollVelocity=(scrollY-lastScrollY)/elapsed*1000;
-    lastScrollY=scrollY;lastScrollTime=now;
-  },{passive:true});
-  let previousTime=performance.now();
-  const animate=time=>{
-    const delta=Math.min(.018,(time-previousTime)/1000);
-    previousTime=time;
-    scrollVelocity*=Math.pow(.02,delta);
-    updateHero();
-    rows.forEach(state=>{
-      if(!state.visible||document.hidden||reducedMotion)return;
-      const normalizedScrollVelocity=Math.min(Math.abs(scrollVelocity)/900,1);
-      const easedScrollVelocity=normalizedScrollVelocity*normalizedScrollVelocity*(3-2*normalizedScrollVelocity);
-      const scrollBoost=easedScrollVelocity*maxScrollBoost;
-      state.scrollSpring.target=1+scrollBoost;
-      const scrollFactor=Math.max(1,updateSpring(state.scrollSpring,delta));
-      state.directionSpring.target=scrollVelocity < -40 ? -1 : 1;
-      const scrollDirectionFactor=Math.max(-1,Math.min(1,updateSpring(state.directionSpring,delta)));
-      if(!state.dragging&&Math.abs(state.dragVelocity)>.1){
-        state.offset+=state.dragVelocity*delta;
-        state.dragVelocity*=Math.pow(.045,delta);
-      }
-      const pauseFactor=state.dragging||time<state.pauseUntil?0:1;
-      const pixelsPerSecond=state.baseVelocity*7*viewportVelocityScale;
-      state.offset+=state.direction*scrollDirectionFactor*pixelsPerSecond*scrollFactor*pauseFactor*delta;
-      if(state.offset<=-state.setWidth)state.offset+=state.setWidth;
-      if(state.offset>=0)state.offset-=state.setWidth;
-      state.track.style.transform=`translate3d(${state.offset}px,0,0)`;
-    });
-    requestAnimationFrame(animate);
-  };
-  if(!reducedMotion)requestAnimationFrame(animate);
-};
-const initializeFlows=()=>document.querySelectorAll("[data-flow-choice]").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll("[data-flow-choice]").forEach(item=>{const active=item===button;item.classList.toggle("is-active",active);item.setAttribute("aria-pressed",String(active));});document.querySelectorAll("[data-flow]").forEach(flow=>flow.hidden=flow.dataset.flow!==button.dataset.flowChoice);}));
-const initializeContact=()=>{
-  const form=document.querySelector("[data-contact-form]"),context=document.querySelector("[data-contact-context]"),contextValue=document.querySelector("[data-contact-context-value]"),message=form.elements.namedItem("message");
-  document.querySelectorAll("[data-contact-prompt]").forEach(button=>button.addEventListener("click",()=>{message.value=button.dataset.contactPrompt;message.focus();}));
-  window.addEventListener("sugapp:product-contact",event=>{const product=event.detail.product;if(!product)return;contextValue.textContent=product.name;context.hidden=false;message.value=`Quiero conversar sobre una solución de ${product.name}.`;});
-  form.addEventListener("submit",async event=>{event.preventDefault();const data=new FormData(form);const text=`Nombre: ${data.get("name")}\nContacto: ${data.get("contact")}\nTipo: ${data.get("type")||"Sin definir"}\nMensaje: ${data.get("message")}`;const status=document.querySelector("[data-form-status]");try{await navigator.clipboard.writeText(text);status.textContent="Consulta copiada. El envío directo se habilitará cuando se confirme el canal público.";}catch{status.textContent="Consulta preparada. El envío directo se habilitará cuando se confirme el canal público.";}})
-};
-initializeIntro();initializeReveal();initializeImprovementSelector();initializeMarquees();initializeFlows();initializeProductNavigation();initializeContact();updateHero();
-document.querySelector("[data-year]").textContent=new Date().getFullYear();
-addEventListener("resize",updateHero,{passive:true});
+function initSolutions(){const root=document.querySelector('[data-solutions-list]');if(!root)return;const links=item=>item.links.map(link=>`<a href="${link[1]}">${escape(link[0])}</a>`).join('');root.innerHTML=`<div class="solutions-tabs" role="tablist" aria-label="Familias de soluciones">${solutions.map((item,index)=>`<button class="solution-tab" id="solution-tab-${item.id}" type="button" role="tab" aria-selected="${index===0}" aria-controls="solution-detail" tabindex="${index===0?0:-1}" data-solution-tab="${index}">${escape(item.name)}</button>`).join('')}</div><article class="solution-detail" id="solution-detail" role="tabpanel" tabindex="0"></article><div class="solutions-accordion">${solutions.map((item,index)=>`<article class="solution-mobile-item"><h3><button class="solution-mobile-trigger" type="button" aria-expanded="${index===0}" aria-controls="solution-mobile-${item.id}" data-solution-mobile="${index}">${escape(item.name)}<svg viewBox="0 0 12 8" aria-hidden="true"><path d="m1 1.5 5 5 5-5"/></svg></button></h3><div class="solution-mobile-panel" id="solution-mobile-${item.id}" ${index?'hidden':''}><p>${escape(item.tagline)}</p><nav aria-label="Productos de ${escape(item.name)}">${links(item)}</nav></div></article>`).join('')}</div>`;const detail=root.querySelector('.solution-detail'),tabs=[...root.querySelectorAll('[data-solution-tab]')];const select=index=>{const item=solutions[index];tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1});detail.setAttribute('aria-labelledby',`solution-tab-${item.id}`);detail.classList.remove('is-changing');void detail.offsetWidth;detail.innerHTML=`<h3>${escape(item.name)}</h3><p>${escape(item.tagline)}</p><nav class="solution-products" aria-label="Productos de ${escape(item.name)}">${links(item)}</nav>`;detail.classList.add('is-changing')};tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>select(index));tab.addEventListener('keydown',event=>{const map={ArrowRight:(index+1)%tabs.length,ArrowDown:(index+1)%tabs.length,ArrowLeft:(index-1+tabs.length)%tabs.length,ArrowUp:(index-1+tabs.length)%tabs.length,Home:0,End:tabs.length-1};if(event.key in map){event.preventDefault();tabs[map[event.key]].focus();select(map[event.key])}})});root.querySelectorAll('[data-solution-mobile]').forEach((button,index)=>button.addEventListener('click',()=>{root.querySelectorAll('[data-solution-mobile]').forEach((other,i)=>{const active=i===index&&other.getAttribute('aria-expanded')!=='true';other.setAttribute('aria-expanded',String(active));document.getElementById(other.getAttribute('aria-controls')).hidden=!active})}));select(0)}
+
+function initAssembly(){const assembly=document.querySelector('[data-assembly]');if(!assembly)return;if(reduced){assembly.style.setProperty('--assembly-progress','1');return}const update=()=>{const rect=assembly.getBoundingClientRect(),range=innerHeight+rect.height,progress=Math.max(0,Math.min(1,(innerHeight-rect.top)/range*1.45));assembly.style.setProperty('--assembly-progress',progress.toFixed(3))};addEventListener('scroll',update,{passive:true});addEventListener('resize',update,{passive:true});update()}
+
+function modalController(layer,closeSelector){let origin=null;const panel=layer.querySelector('[role="dialog"]');const close=()=>{layer.hidden=true;document.body.classList.remove('modal-open');origin?.focus()};const open=trigger=>{origin=trigger;layer.hidden=false;document.body.classList.add('modal-open');requestAnimationFrame(()=>focusable(panel)[0]?.focus())};layer.querySelectorAll(closeSelector).forEach(el=>el.addEventListener('click',close));document.addEventListener('keydown',event=>{if(layer.hidden)return;if(event.key==='Escape')close();if(event.key==='Tab'){const items=focusable(panel),first=items[0],last=items.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}});return{open,close}}
+
+function initIndustries(){const layer=document.querySelector('[data-industry-dialog]'),content=layer.querySelector('[data-industry-content]'),modal=modalController(layer,'[data-close-industry]');document.querySelectorAll('[data-industry]').forEach(button=>button.addEventListener('click',()=>{const item=industries[button.dataset.industry];if(!item)return;content.innerHTML=`<p class="section-label">Soluciones por industria</p><h2 id="industry-title">${escape(item.title)}</h2><p>${escape(item.summary)}</p><h3>Qué se podría mejorar</h3><ul>${item.problems.map(x=>`<li>${escape(x)}</li>`).join('')}</ul><h3>Soluciones relacionadas</h3><div class="drawer-actions">${item.solutions.map(x=>`<a href="${x[1]}">${escape(x[0])}</a>`).join('')}</div><h3>Formas de comenzar</h3><ul>${item.starts.map(x=>`<li>${escape(x)}</li>`).join('')}</ul><div class="drawer-actions"><button class="primary" type="button" data-industry-advisor>Usar el orientador</button><a href="#contacto" data-industry-contact>Contar mi caso</a></div>`;modal.open(button);history.replaceState(null,'',`#industria-${button.dataset.industry}`);content.querySelector('[data-industry-advisor]').addEventListener('click',()=>{modal.close();document.querySelector('[data-open-advisor]').click()});content.querySelector('[data-industry-contact]').addEventListener('click',()=>{modal.close();document.querySelector('[name="message"]').value=`Tengo un negocio del rubro ${item.title} y quiero mejorar: `})}));const hash=location.hash.match(/^#industria-(.+)$/);if(hash)document.querySelector(`[data-industry="${CSS.escape(hash[1])}"]`)?.click()}
+
+function initAdvisor(){const layer=document.querySelector('[data-advisor-dialog]'),content=layer.querySelector('[data-advisor-content]'),modal=modalController(layer,'[data-close-advisor]');let step=0,answers={},recommendation=null;const render=()=>{if(step<advisorSteps.length){const current=advisorSteps[step];content.innerHTML=`<p class="advisor-progress">Paso ${step+1} de ${advisorSteps.length}</p><p class="advisor-question">${escape(current.question)}</p><div class="advisor-options">${current.options.map(x=>`<button type="button" data-answer="${x[0]}">${escape(x[1])}</button>`).join('')}</div>${step?'<button type="button" data-advisor-back>← Volver</button>':''}`;content.querySelectorAll('[data-answer]').forEach(b=>b.addEventListener('click',()=>{answers[current.key]=b.dataset.answer;step++;render()}));content.querySelector('[data-advisor-back]')?.addEventListener('click',()=>{step--;render()})}else{recommendation=getRecommendation(answers);content.innerHTML=`<div class="advisor-result"><p class="section-label">Un camino posible</p><h3>${escape(recommendation.title)}</h3><p>${escape(recommendation.text)}</p><div class="drawer-actions"><a class="primary" href="${recommendation.href}">${escape(recommendation.label)}</a><button type="button" data-advisor-contact>Contar mi caso</button><button type="button" data-advisor-reset>Volver a empezar</button></div></div>`;content.querySelector('[data-advisor-reset]').addEventListener('click',()=>{step=0;answers={};render()});content.querySelector('[data-advisor-contact]').addEventListener('click',()=>{document.querySelector('[data-recommendation]').value=recommendation.title;document.querySelector('[name="type"]').value=[...document.querySelector('[name="type"]').options].some(o=>o.value===recommendation.title)?recommendation.title:'';document.querySelector('[name="message"]').value=`El orientador me recomendó ${recommendation.title}. Quiero contarles mi caso: `;modal.close();location.hash='contacto';document.querySelector('[name="message"]').focus()})}};document.querySelectorAll('[data-open-advisor]').forEach(button=>button.addEventListener('click',()=>{render();modal.open(button)}))}
+
+function initContact(){const form=document.querySelector('[data-contact-form]'),status=form.querySelector('[data-form-status]');const saved=sessionStorage.getItem('sugapp-contact-type');if(saved){form.elements.type.value=saved;form.elements.message.value=`Quiero conversar sobre ${saved}. `;sessionStorage.removeItem('sugapp-contact-type')}document.querySelectorAll('[data-contact-prompt]').forEach(button=>button.addEventListener('click',()=>{form.elements.message.value=button.dataset.contactPrompt;form.elements.message.focus()}));form.addEventListener('submit',async event=>{event.preventDefault();const required=[form.elements.name,form.elements.contact,form.elements.message],invalid=required.filter(x=>!x.value.trim());required.forEach(x=>x.classList.toggle('field-error',invalid.includes(x)));if(invalid.length){status.textContent='Completá los campos marcados para preparar la consulta.';invalid[0].focus();return}const data=new FormData(form),text=`Consulta para SugApp\nNombre: ${data.get('name')}\nContacto: ${data.get('contact')}\nSolución: ${data.get('type')||data.get('recommendation')||'Sin definir'}\nMensaje: ${data.get('message')}`;if(CONTACT.whatsapp){location.href=`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;return}if(CONTACT.email){location.href=`mailto:${CONTACT.email}?subject=${encodeURIComponent('Consulta para SugApp')}&body=${encodeURIComponent(text)}`;return}try{await navigator.clipboard.writeText(text);status.textContent='Consulta copiada. Podés guardarla hasta que publiquemos el canal de contacto.'}catch{status.textContent='Consulta preparada. Seleccioná el texto del mensaje para conservarlo hasta que publiquemos el canal.'}})}
+
+initIntro();initHeroCta();initHeader();initMarquees();initSolutions();initAssembly();initIndustries();initAdvisor();initContact();document.querySelector('[data-year]').textContent=new Date().getFullYear();const scrollHint=document.querySelector('.hero-scroll');addEventListener('scroll',()=>scrollHint?.classList.toggle('is-hidden',scrollY>120),{passive:true});

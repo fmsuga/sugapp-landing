@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fmsuga.github.io/sugapp-landing/sitemap.xml

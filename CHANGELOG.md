@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Landing V2
+
+- Reestructurada la home como puerta de entrada comercial compacta sin abandonar el hero fotográfico, la intro, la paleta ni las burbujas interactivas.
+- Incorporadas seis familias editoriales de soluciones y siete páginas HTML con contenido, SEO y diseño compartidos.
+- Incorporados mega menús accesibles para soluciones e industrias, con ocho paneles sectoriales basados en datos centralizados.
+- Incorporado Orientador SugApp local mediante un árbol de decisión, con transferencia de contexto al formulario.
+- Incorporadas tres experiencias visuales apiladas con su estado real claramente indicado.
+- Incorporado mensaje explícito de alcance adaptable, evidencia compacta y formulario con validación y fallback sin canal inventado.
+- Agregados `sitemap.xml`, `robots.txt`, `.nojekyll` y un validador de rutas, assets, IDs y metadatos.
+- Retirado el catálogo modal genérico y sus estilos/scripts obsoletos.
+
 ### Added
 
 - Added an extensible catalog with eight initial digital product categories.

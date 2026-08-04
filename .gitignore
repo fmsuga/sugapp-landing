@@ -49,6 +49,7 @@ temp/
 coverage/
 playwright-report/
 test-results/
+.tmp-validation/
 
 # Configuracion local de editores y sistema.
 .idea/

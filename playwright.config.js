@@ -1,0 +1,1 @@
+module.exports={testDir:'./tools',testMatch:'site.spec.js',timeout:20000,use:{headless:true,launchOptions:{executablePath:'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe'}},reporter:'line'};
