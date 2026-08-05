@@ -16,6 +16,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Incorporado mensaje explícito de alcance adaptable, evidencia compacta y formulario con validación y fallback sin canal inventado.
 - Agregados `sitemap.xml`, `robots.txt`, `.nojekyll` y un validador de rutas, assets, IDs y metadatos.
 - Retirado el catálogo modal genérico y sus estilos/scripts obsoletos.
+- Refinado el hero con el título “Soluciones modernas para problemas cotidianos”, composición alineada a la derecha y CTA animado.
+- Unificadas la escena de consultas y la de soluciones en una única sección editorial, sin contenido duplicado.
+- Incorporados exactamente dieciséis mensajes de comercios y profesionales, distribuidos en dos carriles inclinados con movimiento continuo, aceleración e inversión por scroll, arrastre manual y texto nítido.
+- Vinculada cada consulta con una de ocho soluciones concretas: página web o landing page, sitio institucional, catálogo y pedidos, tienda online, turnos, gestión, automatizaciones y software a medida.
+- Reemplazado el panel artesanal por un navegador vertical basado en Swiper `14.0.6`, con transición Push, autoplay de siete segundos y bloqueo definitivo después de una interacción manual.
+- Reubicados los controles verticales en la composición `Flechas | Lista | Contenido`, con SVG sólidos, targets accesibles y visibilidad limitada a la escena.
+- Conservado en mobile el acordeón editorial de apertura única, sin autoplay ni slider visible.
+- Agregados estados de foco, navegación por teclado, pausa por hover/foco/visibilidad, soporte para `prefers-reduced-motion` y fallback comprensible sin JavaScript.
+- Ampliada la validación Playwright para cubrir 390, 768 y 1440 px, rutas, overflow, mensajes, Swiper, autoplay, controles, bloqueo manual y movimiento reducido.
 
 ### Added
 

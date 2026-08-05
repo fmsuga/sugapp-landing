@@ -52,6 +52,8 @@ test-results/
 .tmp-validation/
 
 # Configuracion local de editores y sistema.
+.agents/
+skills-lock.json
 .idea/
 .vscode/
 .fleet/
