@@ -1,8 +1,8 @@
 # 🍭 SugApp
 
-Public website for SugApp, showcasing digital products and solutions for small businesses and professionals.
+A public showcase of digital tools and web experiences built for small businesses, professionals and everyday operations.
 
-Currently available as a beta version and actively evolving.
+Currently in beta.
 
 ## Live Demo
 
