@@ -1,8 +1,8 @@
-# 🍭 SugApp Landing Page
+# 🍭 SugApp
 
-The public landing page for SugApp, showcasing its digital solutions for businesses and professionals.
+Public website for SugApp, showcasing digital products and solutions for small businesses and professionals.
 
-Currently evolving through its V2 experience.
+Currently available as a beta version and actively evolving.
 
 ## Live Demo
 
