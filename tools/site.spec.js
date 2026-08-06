@@ -1,60 +1,109 @@
-const {test,expect}=require('@playwright/test');
-const routes=['/','/soluciones/landing-profesional.html','/soluciones/sitio-institucional.html','/soluciones/catalogo-digital.html','/soluciones/turnos-reservas.html','/soluciones/automatizaciones.html','/soluciones/software-a-medida.html','/soluciones/mantenimiento-evolucion.html'];
+const { test, expect } = require("@playwright/test");
 
-for(const width of [390,768,1440])test(`home ${width}px`,async({page})=>{
-  const errors=[];page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});page.on('pageerror',e=>errors.push(e.message));
-  await page.setViewportSize({width,height:900});await page.goto('http://127.0.0.1:8123/',{waitUntil:'networkidle'});await page.evaluate(()=>sessionStorage.setItem('sugapp-intro','seen'));await page.reload();
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();expect(errors).toEqual([]);
-  const heroLayout=await page.locator('.hero-content').evaluate(root=>{const copy=root.querySelector('.hero-copy'),title=root.querySelector('h1'),lineHeight=parseFloat(getComputedStyle(copy).lineHeight);return{copyLines:Math.round(copy.getBoundingClientRect().height/lineHeight),titleTop:title.getBoundingClientRect().top/innerHeight,linesFit:[...root.querySelectorAll('.hero-title-line')].every(line=>line.scrollWidth<=root.clientWidth+1)}});expect(heroLayout.copyLines).toBeLessThanOrEqual(width<600?4:2);expect(heroLayout.titleTop).toBeLessThan(.62);expect(heroLayout.linesFit).toBeTruthy();
+const baseURL = "http://127.0.0.1:8123";
+const productRoutes = [
+  "/soluciones/paginas-web.html",
+  "/soluciones/stock-ventas-gestion.html",
+  "/soluciones/pedidos-gastronomia.html",
+  "/soluciones/turnos-reservas.html",
+  "/soluciones/desarrollo-a-medida.html",
+];
+
+for (const width of [390, 768, 1440]) {
+  test(`home beta a ${width}px`, async ({ page }) => {
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+    await page.goto(`${baseURL}/`);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("#hero-title")).toHaveText("Soluciones modernas para problemas cotidianos.");
+    await expect(page.locator(".product-card")).toHaveCount(5);
+    await expect(page.locator(".product-preview")).toHaveCount(5);
+    await expect(page.locator(".product-card-link")).toHaveCount(5);
+    await expect(page.locator(".query-bubble")).toHaveCount(16);
+    await expect(page.locator(".query-cloud a, .query-cloud button")).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    expect(errors).toEqual([]);
+  });
+}
+
+test("arquitectura, anclas y oferta pública", async ({ page }) => {
+  await page.goto(`${baseURL}/`);
+  await expect(page.locator("#inicio + #consultas")).toHaveCount(1);
+  await expect(page.locator("#consultas + #productos")).toHaveCount(1);
+  await expect(page.locator("#productos + #contacto")).toHaveCount(1);
+  await expect(page.locator(".product-card h3")).toHaveText([
+    "Páginas web",
+    "Stock, ventas y gestión",
+    "Pedidos para gastronomía",
+    "Turnos y reservas",
+    "Desarrollo a medida",
+  ]);
+  expect(await page.locator(".product-card-link").evaluateAll((links) => links.map((link) => link.getAttribute("href")))).toEqual([
+    "soluciones/paginas-web.html",
+    "soluciones/stock-ventas-gestion.html",
+    "soluciones/pedidos-gastronomia.html",
+    "soluciones/turnos-reservas.html",
+    "soluciones/desarrollo-a-medida.html",
+  ]);
+  await expect(page.locator(".swiper, #experiencias, #proyectos")).toHaveCount(0);
+  expect(await page.locator("#productos").innerText()).not.toMatch(/precio|pricing|\$\s*\d/i);
 });
 
-test('rutas internas',async({page})=>{for(const path of routes){const response=await page.goto(`http://127.0.0.1:8123${path}`);expect(response.status()).toBe(200);await expect(page.locator('h1')).toHaveCount(1)}});
-
-test('menús, industria, acordeón y orientador',async({page})=>{
-  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8123/');await page.evaluate(()=>sessionStorage.setItem('sugapp-intro','seen'));await page.reload();
-  await page.getByRole('button',{name:'Soluciones',exact:true}).click();await expect(page.locator('#solutions-menu')).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('#solutions-menu')).toBeHidden();
-  await page.getByRole('button',{name:'Industrias',exact:true}).click();await page.getByRole('button',{name:'Kioscos y comercios'}).click();await expect(page.getByRole('dialog',{name:/Kioscos/})).toBeVisible();await page.keyboard.press('Escape');
-  await page.locator('[data-solution-tab="1"]').click();await expect(page.locator('#solution-detail .swiper-slide-active h4')).toHaveText('Sitio institucional');await page.getByRole('button',{name:'¿Por dónde empiezo?'}).click();
-  for(const choice of ['Comercio','Mostrar productos o vender','WhatsApp','Con una versión simple'])await page.getByRole('button',{name:choice,exact:true}).click();
-  await expect(page.locator('[data-advisor-content] h3')).toHaveText('Catálogo digital');await page.keyboard.press('Escape');await expect(page.locator('[data-advisor-dialog]')).toBeHidden();
+test("cinco rutas públicas sin 404 y con metadata", async ({ page }) => {
+  for (const path of productRoutes) {
+    const response = await page.goto(`${baseURL}${path}`);
+    expect(response.status()).toBe(200);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator('meta[name="description"]')).toHaveCount(1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://fmsuga.github.io/sugapp-landing${path}`);
+    await expect(page.locator('[aria-current="page"]')).toHaveCount(1);
+    await expect(page.locator(".beta-note")).toContainText("En desarrollo");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  }
 });
 
-test('formulario accesible y movimiento reducido',async({page})=>{await page.emulateMedia({reducedMotion:'reduce'});await page.goto('http://127.0.0.1:8123/#contacto');await expect(page.locator('[data-intro]')).toHaveCount(0);await expect(page.locator('[data-marquee]').first().locator('.marquee-track')).toHaveCSS('transform','none');await expect(page.locator('[data-marquee]').first()).toHaveAttribute('aria-label','Mensajes desplazables manualmente');await expect(page.locator('[data-message-solution]')).toHaveCount(16);await expect(page.locator('[data-solution-tab]')).toHaveCount(8);await page.locator('[data-contact-form] button[type=submit]').click();await expect(page.locator('[data-form-status]')).toContainText('Completá');await expect(page.locator('#contact-name')).toBeFocused()});
-
-test('escena unificada: mensajes, soluciones y mobile',async({page})=>{
-  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8123/');await expect(page.locator('[data-assembly],canvas')).toHaveCount(0);expect(await page.locator('script[src*="three" i]').count()).toBe(0);
-  await expect(page.locator('#necesidades #familias')).toHaveCount(1);await expect(page.locator('section.solutions')).toHaveCount(0);await expect(page.getByText('Si tu consulta se parece',{exact:false})).toHaveCount(0);await expect(page.getByText('Esto puede empezar por:',{exact:true})).toHaveCount(0);
-  const messages=await page.locator('[data-marquee] .marquee-set:not([aria-hidden]) .client-message').allTextContents();expect(new Set(messages).size).toBe(16);await expect(page.locator('[data-message-solution]')).toHaveCount(16);await expect(page.locator('[data-solution-tab]')).toHaveCount(8);await expect(page.locator('[data-solution-mobile]')).toHaveCount(8);
-  await page.evaluate(()=>scrollTo(0,document.querySelector('#necesidades').offsetTop));const dragRow=page.locator('[data-marquee]').first();await dragRow.hover();const pausedAt=await dragRow.locator('.marquee-track').evaluate(el=>getComputedStyle(el).transform);await page.waitForTimeout(120);expect(await dragRow.locator('.marquee-track').evaluate(el=>getComputedStyle(el).transform)).toBe(pausedAt);const box=await dragRow.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+2);await page.mouse.down();await page.mouse.move(box.x+box.width/2+80,box.y+2,{steps:5});await page.mouse.up();expect(await dragRow.locator('.marquee-track').evaluate(el=>getComputedStyle(el).transform)).not.toBe(pausedAt);
-  await page.locator('[data-message-id="kiosco-stock-ventas"]').evaluate(button=>button.click());await expect(page.locator('[data-solution-tab="5"]')).toHaveAttribute('aria-selected','true');await expect(page.locator('[data-solution-tab="5"]')).toBeFocused({timeout:1200});await expect(page.locator('#solution-detail .swiper-slide-active h4')).toHaveText('Stock, ventas y gestión');await expect(page.locator('[data-solutions-list]')).toHaveAttribute('data-autoplay','stopped');
-  const expectedHrefs=['landing-profesional.html','sitio-institucional.html','catalogo-digital.html','catalogo-digital.html','turnos-reservas.html','software-a-medida.html','automatizaciones.html','software-a-medida.html'];for(let index=0;index<8;index++)await expect(page.locator(`#solution-mobile-${['landing','institutional','catalog','shop','appointments','management','automation','custom'][index]} .solution-actions a`).first()).toHaveAttribute('href',new RegExp(expectedHrefs[index]));
-  await page.setViewportSize({width:390,height:844});await page.reload();await page.evaluate(()=>scrollTo(0,document.querySelector('#necesidades').offsetTop));const fit=await page.locator('[data-message-marquees]').evaluate(root=>({page:document.documentElement.scrollWidth<=innerWidth,bubbles:[...root.querySelectorAll('.client-message')].every(bubble=>bubble.scrollWidth<=bubble.clientWidth+1&&bubble.getBoundingClientRect().width<=innerWidth*.82+1)}));expect(fit.page).toBeTruthy();expect(fit.bubbles).toBeTruthy();await page.locator('[data-message-id="psicologa-turnos"]').evaluate(button=>button.click());await expect(page.locator('[data-solution-mobile="4"]')).toHaveAttribute('aria-expanded','true');await expect(page.locator('[data-solution-mobile="4"]')).toBeFocused({timeout:1200});
+test("menú mobile, Escape, clic exterior y reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${baseURL}/`);
+  await expect(page.locator("[data-intro]")).toHaveCount(0);
+  await expect(page.locator(".query-node:visible")).toHaveCount(6);
+  await expect(page.locator(".query-bubble").first()).toHaveCSS("animation-name", "none");
+  await page.getByRole("button", { name: "Abrir menú" }).click();
+  await expect(page.locator("#main-nav")).toBeVisible();
+  await expect(page.locator("body")).toHaveClass(/menu-open/);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#main-nav")).toBeHidden();
+  await expect(page.getByRole("button", { name: "Abrir menú" })).toBeFocused();
+  await page.getByRole("button", { name: "Abrir menú" }).click();
+  await page.mouse.click(20, 500);
+  await expect(page.locator("#main-nav")).toBeHidden();
 });
 
-test('refinamiento visual e interacción recuperada',async({page})=>{
-  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8123/');await page.evaluate(()=>sessionStorage.setItem('sugapp-intro','seen'));await page.reload();
-  await expect(page.locator('.site-header')).not.toContainText('Contar mi caso');await expect(page.locator('.hero .eyebrow')).toHaveCount(0);await expect(page.locator('.solution-index')).toHaveCount(0);
-  const heroCta=page.locator('.hero-action');
-  await page.waitForFunction(()=>[...document.querySelectorAll('.hero-title-word')].every(word=>getComputedStyle(word).opacity==='1'));
-  const menuButton=page.getByRole('button',{name:'Soluciones',exact:true});await menuButton.click();expect(await page.locator('.nav-chevron').first().evaluate(el=>getComputedStyle(el).transform)).not.toBe('none');await page.keyboard.press('Escape');
-  await page.locator('[data-solution-tab="0"]').focus();await page.keyboard.press('ArrowDown');await expect(page.locator('[data-solution-tab="1"]')).toBeFocused();await expect(page.locator('#solution-detail')).toHaveAttribute('aria-labelledby','solution-tab-institutional');
-  await page.evaluate(()=>scrollTo(0,document.querySelector('#necesidades').offsetTop+260));await page.waitForTimeout(60);await expect(page.locator('[data-marquee]').first()).toHaveAttribute('data-scroll-direction','down');await page.evaluate(()=>scrollBy(0,-220));await page.waitForTimeout(25);await expect(page.locator('[data-marquee]').first()).toHaveAttribute('data-scroll-direction','up');
-  await page.waitForTimeout(700);const motion=await page.locator('[data-marquee]').first().evaluate(async row=>{const track=row.querySelector('.marquee-track'),samples=[];for(let i=0;i<30;i++){await new Promise(requestAnimationFrame);samples.push(new DOMMatrixReadOnly(getComputedStyle(track).transform).m41)}const steps=samples.slice(1).map((value,index)=>Math.abs(value-samples[index]));return{unique:new Set(samples).size,maxStep:Math.max(...steps),travel:Math.abs(samples.at(-1)-samples[0])}});expect(motion.unique).toBeGreaterThanOrEqual(12);expect(motion.maxStep).toBeLessThanOrEqual(1);expect(motion.travel).toBeGreaterThan(10);
-  const marquee=page.locator('[data-marquee]').first();await marquee.focus();const before=await marquee.locator('.marquee-track').evaluate(el=>getComputedStyle(el).transform);await page.keyboard.press('ArrowRight');const after=await marquee.locator('.marquee-track').evaluate(el=>getComputedStyle(el).transform);expect(after).not.toBe(before);
-  const crisp=await page.locator('[data-message-marquees]').evaluate(root=>{const bubble=root.querySelector('.client-message'),track=root.querySelector('.marquee-track'),matrix=new DOMMatrixReadOnly(getComputedStyle(track).transform);return{rotation:getComputedStyle(root).transform,bubbleTransform:getComputedStyle(bubble).transform,fontSize:parseFloat(getComputedStyle(bubble).fontSize),weight:getComputedStyle(bubble).fontWeight,filter:getComputedStyle(bubble).filter,trackX:matrix.m41}});expect(crisp.rotation).not.toBe('none');expect(crisp.bubbleTransform).toBe('none');expect(crisp.fontSize).toBeGreaterThanOrEqual(16);expect(Number(crisp.weight)).toBeGreaterThanOrEqual(500);expect(crisp.filter).toBe('none');expect(Number.isInteger(crisp.trackX)).toBeTruthy();
-  await expect(heroCta).toHaveClass(/is-ready/,{timeout:3000});await expect(heroCta).toBeVisible();
-  await page.setViewportSize({width:390,height:844});await page.reload();await page.locator('[data-solution-mobile="1"]').click();await expect(page.locator('#solution-mobile-institutional')).toBeVisible();await expect(page.locator('#solution-mobile-landing')).toBeHidden();
+test("formulario breve, errores inline y contexto interno", async ({ page }) => {
+  await page.goto(`${baseURL}/#contacto`);
+  await page.locator('[data-contact-form] button[type="submit"]').click();
+  await expect(page.locator("[data-form-status]")).toContainText("Completá");
+  await expect(page.locator("#contact-name")).toBeFocused();
+  await expect(page.locator("#contact-name")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator(".field-message:visible")).toHaveCount(4);
+  await page.locator("#contact-name").fill("Agus");
+  await expect(page.locator("#contact-name")).toHaveAttribute("aria-invalid", "false");
+
+  await page.goto(`${baseURL}/soluciones/pedidos-gastronomia.html`);
+  await page.locator('[data-contact-link="Pedidos para gastronomía"]').first().click();
+  await expect(page).toHaveURL(/#contacto$/);
+  await expect(page.locator("#contact-message")).toHaveValue(/Pedidos para gastronomía/);
 });
 
-test('navegador autónomo: entrada, Swiper vertical, controles y bloqueo manual',async({page})=>{
-  test.setTimeout(40000);await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8123/');await page.evaluate(()=>sessionStorage.setItem('sugapp-intro','seen'));await page.reload();await page.locator('#familias').scrollIntoViewIfNeeded();
-  await expect(page.locator('#familias')).toHaveClass(/is-introduced/);const delays=await page.locator('[data-solution-tab]').evaluateAll(tabs=>tabs.map(tab=>getComputedStyle(tab).animationDelay));expect(new Set(delays).size).toBe(8);await expect(page.locator('.solution-step-controls')).toHaveAttribute('aria-hidden','false');const swiperConfig=await page.locator('.solution-detail').evaluate(el=>({direction:el.swiper.params.direction,effect:el.swiper.params.effect,speed:el.swiper.params.speed,delay:el.swiper.params.autoplay.delay,disableOnInteraction:el.swiper.params.autoplay.disableOnInteraction}));expect(swiperConfig).toEqual({direction:'vertical',effect:'slide',speed:650,delay:7000,disableOnInteraction:true});const controlLayout=await page.locator('[data-solution-previous]').evaluate(button=>{const box=button.getBoundingClientRect(),list=document.querySelector('.solutions-tabs').getBoundingClientRect(),panel=document.querySelector('.solution-detail').getBoundingClientRect(),svg=button.querySelector('svg'),style=getComputedStyle(button);return{width:box.width,height:box.height,left:box.left,right:box.right,listLeft:list.left,listRight:list.right,panelLeft:panel.left,fill:getComputedStyle(svg).fill,border:style.borderTopWidth,background:style.backgroundColor}});expect(controlLayout.width).toBeGreaterThanOrEqual(43.9);expect(controlLayout.height).toBeGreaterThanOrEqual(43.9);expect(controlLayout.right).toBeLessThanOrEqual(controlLayout.listLeft);expect(controlLayout.listRight).toBeLessThanOrEqual(controlLayout.panelLeft);expect(controlLayout.fill).not.toBe('none');expect(controlLayout.border).toBe('0px');expect(controlLayout.background).toBe('rgba(0, 0, 0, 0)');
-  const beforeScroll=await page.locator('[data-solution-tab][aria-selected=true]').getAttribute('data-solution-tab');await page.evaluate(()=>scrollBy(0,180));await page.waitForTimeout(200);expect(await page.locator('[data-solution-tab][aria-selected=true]').getAttribute('data-solution-tab')).toBe(beforeScroll);
-  await page.waitForTimeout(9000);await expect(page.locator('[data-solution-tab="1"]')).toHaveAttribute('aria-selected','true');
-  await page.getByRole('button',{name:'Ver solución siguiente'}).click();await expect(page.locator('#solution-detail')).toHaveAttribute('data-direction','next');await expect(page.locator('[data-solution-tab="2"]')).toHaveAttribute('aria-selected','true');await page.waitForTimeout(650);
-  await page.getByRole('button',{name:'Ver solución anterior'}).click();await expect(page.locator('#solution-detail')).toHaveAttribute('data-direction','previous');await expect(page.locator('[data-solution-tab="1"]')).toHaveAttribute('aria-selected','true');await page.waitForTimeout(7200);await expect(page.locator('[data-solution-tab="1"]')).toHaveAttribute('aria-selected','true');await expect(page.locator('[data-solutions-list]')).toHaveAttribute('data-autoplay','stopped');
-  await page.evaluate(()=>scrollTo(0,0));await expect(page.locator('.solution-step-controls')).toHaveAttribute('aria-hidden','true');
-  await page.setViewportSize({width:390,height:844});await page.reload();await expect(page.locator('.solution-step-controls')).toHaveCSS('display','none');await expect(page.locator('.solution-detail')).toHaveCSS('display','none');await expect(page.locator('.solutions-accordion')).toHaveCSS('display','block');
+test("navegación esencial disponible sin JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  await page.goto(`${baseURL}/`);
+  await expect(page.locator("#main-nav")).toBeVisible();
+  await expect(page.locator(".menu-toggle")).toBeHidden();
+  await expect(page.locator("#hero-title")).toContainText("Soluciones modernas");
+  await expect(page.locator(".product-card-link")).toHaveCount(5);
+  await context.close();
 });
-
-test('navegador con movimiento reducido no usa autoplay',async({page})=>{test.setTimeout(15000);await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8123/');await page.locator('#familias').scrollIntoViewIfNeeded();await page.waitForTimeout(7200);await expect(page.locator('[data-solution-tab="0"]')).toHaveAttribute('aria-selected','true');await page.getByRole('button',{name:'Ver solución siguiente'}).click();await expect(page.locator('[data-solution-tab="1"]')).toHaveAttribute('aria-selected','true');expect(await page.locator('.solution-detail').evaluate(el=>el.swiper.params.speed)).toBe(0);});

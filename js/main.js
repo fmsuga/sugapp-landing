@@ -1,5 +1,7 @@
 import { CONTACT } from "./config.js";
 
+document.documentElement.classList.add("js");
+
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function initHeroTitle() {
@@ -53,17 +55,22 @@ function initHeader() {
 
   const close = () => {
     nav.classList.remove("is-open");
+    document.body.classList.remove("menu-open");
     toggle.setAttribute("aria-expanded", "false");
     toggle.querySelector(".sr-only").textContent = "Abrir menú";
   };
 
   toggle.addEventListener("click", () => {
     const open = nav.classList.toggle("is-open");
+    document.body.classList.toggle("menu-open", open);
     toggle.setAttribute("aria-expanded", String(open));
     toggle.querySelector(".sr-only").textContent = open ? "Cerrar menú" : "Abrir menú";
   });
   nav.addEventListener("click", (event) => {
     if (event.target.closest("a")) close();
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (nav.classList.contains("is-open") && !header.contains(event.target)) close();
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && nav.classList.contains("is-open")) {
@@ -72,6 +79,9 @@ function initHeader() {
     }
   });
   addEventListener("scroll", () => header.classList.toggle("is-scrolled", scrollY > 24), { passive: true });
+  addEventListener("resize", () => {
+    if (innerWidth > 900) close();
+  }, { passive: true });
 }
 
 function initMessageCloud() {
@@ -398,22 +408,38 @@ function initContact() {
   const form = document.querySelector("[data-contact-form]");
   if (!form) return;
   const status = form.querySelector("[data-form-status]");
+  const submit = form.querySelector("[data-contact-submit]");
+  const interest = form.querySelector("[data-contact-interest]");
+  const required = [form.elements.name, form.elements.business, form.elements.contact, form.elements.message];
+  form.noValidate = true;
   const saved = sessionStorage.getItem("sugapp-contact-type");
   if (saved) {
-    const matchesOption = [...form.elements.type.options].some((option) => option.value === saved);
-    if (matchesOption) form.elements.type.value = saved;
+    interest.value = saved;
     form.elements.message.value = `Quiero conversar sobre ${saved}. `;
     sessionStorage.removeItem("sugapp-contact-type");
   }
+  if (CONTACT.whatsapp || CONTACT.email) submit.textContent = "Enviar consulta →";
+  const submitLabel = submit.textContent;
+  const restoreSubmit = () => {
+    submit.disabled = false;
+    submit.textContent = submitLabel;
+    form.removeAttribute("aria-busy");
+  };
+
+  required.forEach((field) => field.addEventListener("input", () => {
+    field.classList.remove("field-error");
+    field.setAttribute("aria-invalid", "false");
+    document.getElementById(`${field.id}-error`).hidden = true;
+  }));
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const required = [form.elements.name, form.elements.contact, form.elements.message];
     const invalid = required.filter((field) => !field.value.trim());
     required.forEach((field) => {
       const hasError = invalid.includes(field);
       field.classList.toggle("field-error", hasError);
       field.setAttribute("aria-invalid", String(hasError));
+      document.getElementById(`${field.id}-error`).hidden = !hasError;
     });
     if (invalid.length) {
       status.textContent = "Completá los campos marcados para preparar la consulta.";
@@ -422,20 +448,29 @@ function initContact() {
     }
 
     const data = new FormData(form);
-    const text = `Consulta para SugApp\nNombre: ${data.get("name")}\nContacto: ${data.get("contact")}\nSolución: ${data.get("type") || "Sin definir"}\nMensaje: ${data.get("message")}`;
+    const text = `Hola, estuve viendo SugApp y quiero consultar por una solución para mi negocio.\n\nNombre: ${data.get("name")}\nNegocio o actividad: ${data.get("business")}\nContacto: ${data.get("contact")}\nInterés: ${data.get("interest") || "A definir"}\nNecesito resolver: ${data.get("message")}`;
+    submit.disabled = true;
+    form.setAttribute("aria-busy", "true");
     if (CONTACT.whatsapp) {
+      submit.textContent = "Abriendo WhatsApp…";
       location.href = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+      setTimeout(restoreSubmit, 800);
       return;
     }
     if (CONTACT.email) {
+      submit.textContent = "Abriendo correo…";
       location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent("Consulta para SugApp")}&body=${encodeURIComponent(text)}`;
+      setTimeout(restoreSubmit, 800);
       return;
     }
+    submit.textContent = "Copiando…";
     try {
       await navigator.clipboard.writeText(text);
-      status.textContent = "Consulta copiada. Podés guardarla hasta que publiquemos el canal de contacto.";
+      status.textContent = "Consulta copiada. Ya podés pegarla en el canal por el que contactes a SugApp.";
     } catch {
-      status.textContent = "Consulta preparada. Copiá el contenido del mensaje para conservarlo.";
+      status.textContent = "No pudimos copiar la consulta. Revisá los permisos del navegador e intentá nuevamente.";
+    } finally {
+      restoreSubmit();
     }
   });
 }

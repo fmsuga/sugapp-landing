@@ -1,1 +1,12 @@
-const toggle=document.querySelector('[data-menu-toggle]'),nav=document.querySelector('[data-nav]');toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open))});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav?.classList.contains('is-open')){nav.classList.remove('is-open');toggle.setAttribute('aria-expanded','false');toggle.focus()}});document.querySelector('[data-year]').textContent=new Date().getFullYear();document.querySelectorAll('[data-contact-link]').forEach(link=>link.addEventListener('click',()=>sessionStorage.setItem('sugapp-contact-type',link.dataset.contactLink))); 
+document.documentElement.classList.add('js');
+const toggle=document.querySelector('[data-menu-toggle]');
+const nav=document.querySelector('[data-nav]');
+const header=document.querySelector('[data-header]')||toggle?.closest('header');
+const closeMenu=()=>{nav?.classList.remove('is-open');document.body.classList.remove('menu-open');toggle?.setAttribute('aria-expanded','false');const label=toggle?.querySelector('.sr-only');if(label)label.textContent='Abrir menú'};
+toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');document.body.classList.toggle('menu-open',open);toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.sr-only').textContent=open?'Cerrar menú':'Abrir menú'});
+nav?.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu()});
+document.addEventListener('pointerdown',event=>{if(nav?.classList.contains('is-open')&&!header?.contains(event.target))closeMenu()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav?.classList.contains('is-open')){closeMenu();toggle.focus()}});
+addEventListener('resize',()=>{if(innerWidth>900)closeMenu()},{passive:true});
+const year=document.querySelector('[data-year]');if(year)year.textContent=new Date().getFullYear();
+document.querySelectorAll('[data-contact-link]').forEach(link=>link.addEventListener('click',()=>sessionStorage.setItem('sugapp-contact-type',link.dataset.contactLink)));
